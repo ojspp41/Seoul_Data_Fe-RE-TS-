@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
 
 interface Birth {
   year: string;
@@ -11,21 +12,35 @@ interface UserState {
   gender: string;
   email: string;
   nickname: string;
-  setBirth: (birth: Birth) => void;
+  setBirth: (birth: Partial<Birth>) => void;
   setGender: (gender: string) => void;
   setEmail: (email: string) => void;
   setNickname: (nickname: string) => void;
 }
 
-const useUserStore = create<UserState>((set) => ({
-  birth: { year: '', month: '', day: '' },
-  gender: '',
-  email: '',
-  nickname: '',
-  setBirth: (birth) => set({ birth }),
-  setGender: (gender) => set({ gender }),
-  setEmail: (email) => set({ email }),
-  setNickname: (nickname) => set({ nickname }),
-}));
+const useUserStore = create<UserState>()(
+  immer((set) => ({
+    birth: { year: '', month: '', day: '' },
+    gender: '',
+    email: '',
+    nickname: '',
+    setBirth: (birth) =>
+      set((state) => {
+        Object.assign(state.birth, birth);
+      }),
+    setGender: (gender) =>
+      set((state) => {
+        state.gender = gender;
+      }),
+    setEmail: (email) =>
+      set((state) => {
+        state.email = email;
+      }),
+    setNickname: (nickname) =>
+      set((state) => {
+        state.nickname = nickname;
+      }),
+  }))
+);
 
 export default useUserStore;
