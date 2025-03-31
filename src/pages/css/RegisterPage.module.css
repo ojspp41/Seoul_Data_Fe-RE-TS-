@@ -1,0 +1,31 @@
+/* pages/css/RegisterPage.module.css */
+.container {
+  padding: 24px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 160%;
+  margin-bottom: 24px;
+}
+
+.submitButton {
+  margin-top: 24px;
+  width: 100%;
+  padding: 12px 0;
+  background-color: #4a4a4a;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 8px;
+  opacity: 0.5;
+  cursor: default;
+}
+
+.submitButton:enabled {
+  opacity: 1;
+  cursor: pointer;
+}
