@@ -1,5 +1,5 @@
 
-import styles from './css/MainPage.module.css';
+import styles from './css/Mainpage.module.css';
 
 const MainPage = () => {
   return (
