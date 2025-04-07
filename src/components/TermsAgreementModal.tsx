@@ -30,15 +30,23 @@ const TermsAgreementModal: React.FC<TermsAgreementModalProps> = ({
     setRegisterCheck(prevState => ({ ...prevState, [id]: checked }));
   };
 
-  const handleSubmitClick = () => {
+  const handleSubmitClick = async () => {
     if (isSubmitting) return;
+  
     if (!registerCheck.terms1 || !registerCheck.terms2) {
       alert('필수 항목을 모두 선택해주세요.');
       return;
     }
-    onRequestClose();
-    handleSubmit();
+  
+    setIsSubmitting(true);
+    try {
+      onRequestClose();
+      await handleSubmit(); // 혹시 비동기라면
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+  
 
   const handleOpenAgreement = () => {
     setIsAgreementOpen(true);
