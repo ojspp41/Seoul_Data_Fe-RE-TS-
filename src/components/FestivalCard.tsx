@@ -108,8 +108,8 @@ const HeartButton = styled.button`
   position: absolute;
   bottom: 12px;
   right: 16px;
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
   padding: 8px;
   border-radius: 50%;
   background: #EFEFEF;
