@@ -1,0 +1,46 @@
+/* src/css/components/ChatItem.css */
+.chat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 85px;
+    border-bottom: 1px solid #E5E5E5;
+    padding: 0 5px;
+  }
+  
+  .chat-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .chat-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  
+  .chat-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1A1A1A;
+  }
+  
+  .chat-bottom {
+    font-size: 14px;
+    color: #B3B3B3;
+    text-align: left;
+  }
+  
+  .chat-notification {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #FF4D61;
+  }
+  .chat-age-gender {
+  font-size: 14px;
+  font-weight: 500;
+  color: #999;
+}
