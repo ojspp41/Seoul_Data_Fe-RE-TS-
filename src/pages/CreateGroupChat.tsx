@@ -1,0 +1,80 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './css/CreateGroupChat.module.css';
+
+const MAX_NAME_LENGTH = 24;
+const MAX_DESC_LENGTH = 500;
+
+const categoryList = [
+  '전시/미술', '문화/예술', '교육/체험', '시민화합', '연극', '클래식', 
+  '무용', '콘서트', '뮤지컬', '영화', '국악', '전통/역사', '독창회', '자연/경관', '그 외'
+];
+
+const CreateGroupChat: React.FC = () => {
+  const navigate = useNavigate();
+
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  const isFormValid = name && description && selectedCategory;
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <img
+          src="/assets/x.svg"
+          alt="닫기"
+          className={styles.closeIcon}
+          onClick={() => navigate('/chat')}
+        />
+      </div>
+
+      <h2 className={styles.title}>어떤 채팅방을 만들까요?</h2>
+
+      <label className={styles.label}>채팅방 이름 (필수)</label>
+      <div className={styles.inputBox}>
+        <input
+          type="text"
+          maxLength={MAX_NAME_LENGTH}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="이름이 짧을수록 이해하기 쉬워요"
+        />
+      </div>
+      <div className={styles.charCount}>{name.length}/{MAX_NAME_LENGTH}</div>
+
+      <label className={styles.label}>카테고리 (필수)</label>
+      <div className={styles.categoryWrap}>
+        {categoryList.map((cat) => (
+          <button
+            key={cat}
+            className={`${styles.categoryBtn} ${selectedCategory === cat ? styles.selected : ''}`}
+            onClick={() => setSelectedCategory(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <label className={styles.labels}>채팅방 소개</label>
+      <textarea
+        className={styles.textarea}
+        maxLength={MAX_DESC_LENGTH}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder={`• 어떤 사람과 대화하고 싶으신가요?\n• 지켜야 할 규칙, 공지 사항 등을 안내해 주세요.\n• 설정에서 언제든지 바꿀 수 있어요.`}
+      />
+      <div className={styles.charCount}>{description.length}/{MAX_DESC_LENGTH}</div>
+
+      <button
+        className={`${styles.submitBtn} ${isFormValid ? styles.active : ''}`}
+        disabled={!isFormValid}
+      >
+        채팅방 만들기
+      </button>
+    </div>
+  );
+};
+
+export default CreateGroupChat;

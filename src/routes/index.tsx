@@ -5,6 +5,7 @@ import MainpageLogin from '../pages/MainpageLogin'
 import ParkingMap from '../pages/ParkingMap'
 import Chat from '../pages/ChatList'
 import ChatRoom from '../pages/ChatRoom'
+import CreateGroupChat from '../pages/CreateGroupChat'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -29,5 +30,10 @@ export const router = createBrowserRouter([
   {
     path: '/chat/room/:id',
     element: <ChatRoom />,
+  },
+  {
+    path: '/chat/create-group',
+    element: <CreateGroupChat />,
   }
+  
 ])
