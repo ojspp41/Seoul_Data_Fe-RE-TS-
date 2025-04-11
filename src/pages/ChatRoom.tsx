@@ -117,6 +117,8 @@ const chatMessages: ChatMessageData[] = [
         time: "10:20"
     }
 ];
+const roomTitle = "오버클락도 락";
+const participantCount = 23;
 
 const ChatRoom: React.FC = () => {
     const [focused, setFocused] = useState(false);
@@ -131,6 +133,20 @@ const ChatRoom: React.FC = () => {
 
     return (
         <div>
+            <div className={styles["chat-header"]}>
+                <img src="/assets/slash.svg" alt="뒤로가기" className={styles["header-icon"]} />
+
+                <div className={styles["header-title"]}>
+                    <div className={styles["room-name"]}>{roomTitle}</div>
+                    <div className={styles["participant-info"]}>
+                    <img src="/assets/person.svg" alt="인원수" className={styles["person-icon"]} />
+                    <span className={styles["participant-count"]}>{participantCount}명</span>
+                    </div>
+                </div>
+
+                <img src="/assets/hambuger.svg" alt="메뉴" className={styles["header-icon"]} />
+            </div>
+
 
             <div className={styles['chat-body']} ref={chatBodyRef}>
                 {
@@ -143,9 +159,6 @@ const ChatRoom: React.FC = () => {
                     ))
                 }
             </div>
-            <div style={{
-                    height: '40px'
-                }}></div>
             <div className={styles['chat-input-container']}>
                 <div
                     className={`${styles['chat-input-box']} ${
