@@ -7,7 +7,7 @@ const navItems = [
     {
         label: '메인',
         icon: '/assets/home.svg',
-        path: '/'
+        path: '/mainpage'
     }, {
         label: '채팅',
         icon: '/assets/chat.svg',

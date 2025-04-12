@@ -1,0 +1,79 @@
+.cardWrapper {
+    background-color: #7B7B7B;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* 슬라이더 마진 조절 */
+  .slider {
+    margin-bottom: 0px;
+  }
+  
+  /* slick-slide 내부 flex로 카드 정렬 */
+  .slick-slide > div {
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* 카드 박스 */
+  .card {
+    background-color: #7B7B7B;
+    width: 100%;
+    max-width: 500px;
+    height: 360px;
+    color: white;
+    padding: 30px 20px 10px; /* 아래 padding 줄임 */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin: 0 auto;
+    border-radius: 12px;
+  }
+  
+  .mainText {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  .subText {
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 8px;
+  }
+  
+  /* dots 위치 제어 */
+  :global(.slick-dots) {
+    margin-top: 0px;
+    margin-bottom: 12px;
+  }
+  
+  :global(.slick-dots li button:before) {
+    font-size: 10px;
+    color: #FFFFFF;
+    opacity: 1;
+  }
+  
+  :global(.slick-dots li.slick-active button:before) {
+    color: #FFFFFF;
+    opacity: 1;
+  }
+  
+  /* 버튼은 카드 아래 고정 */
+  .buttonGroup {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 24px; /* 카드와 버튼 간 거리 */
+  }
+  
+  .buttonGroup button {
+    background-color: #333333;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 12px;
+  }
+  
+  

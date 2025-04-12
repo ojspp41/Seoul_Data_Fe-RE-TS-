@@ -1,5 +1,7 @@
 import UpcomingEvents from '../components/UpcomingEvents';
 import FestivalCard from '../components/FestivalCard';
+import MainTopCard from '../components/MainTopCard';
+// import BottomNav from '../components/BottomNav';
 const festivalMock = {
     commentCount: 22,
     mainText: "소개 문구 작성",
@@ -13,8 +15,11 @@ const festivalMock = {
   
 const MainpageLogin = () => {
     return (<div>
+        <MainTopCard />
         <UpcomingEvents/>
         <FestivalCard {...festivalMock} />
+        <div style={{ marginBottom: '100px' }}></div>
+        
     </div>);
 };
 
