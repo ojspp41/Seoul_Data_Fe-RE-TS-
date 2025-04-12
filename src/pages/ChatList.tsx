@@ -4,6 +4,7 @@ import styles from './css/ChatList.module.css';
 import ChatItem from '../components/ChatItem';
 import BottomNav from '../components/BottomNav';
 import GroupChatItem from '../components/GroupChatItem';
+import { useNavigate } from "react-router-dom";
 
 interface ChatData {
   id: number;
@@ -107,7 +108,8 @@ const Chat: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [showSearch, setShowSearch] = useState(false);
-
+  const navigate = useNavigate();
+  
   const filteredGroupChats = groupChatMockData.filter(item => {
     const matchCategory = selectedCategory === '전체' || item.category === selectedCategory;
     const matchKeyword = item.title.toLowerCase().includes(searchKeyword.toLowerCase());
@@ -212,7 +214,7 @@ const Chat: React.FC = () => {
         </div>
       )}
       {selectedMode === 'group' && (
-        <div className={styles["floating-plus-button"]} onClick={() => window.location.href = "/chat/create-group"}>
+        <div className={styles["floating-plus-button"]} onClick={() => navigate("/chat/create-group")}>
           <img src="/assets/plus.svg" alt="그룹채팅 추가" />
         </div>
       )}
