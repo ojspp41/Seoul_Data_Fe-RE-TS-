@@ -6,6 +6,7 @@ import ParkingMap from '../pages/ParkingMap'
 import Chat from '../pages/ChatList'
 import ChatRoom from '../pages/ChatRoom'
 import CreateGroupChat from '../pages/CreateGroupChat'
+import AuthRedirect from '../pages/AuthRedirect'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
   {
     path: '/chat/create-group',
     element: <CreateGroupChat />,
+  },
+  {
+    path: '/auth/kakao/callback"',
+    element: <AuthRedirect />,
   }
   
 ])

@@ -6,9 +6,11 @@ import NicknameInput from '../components/NicknameInput';
 import useUserStore from '../store/userStore';
 import TermsAgreementModal from '../components/TermsAgreementModal';
 import styles from './css/RegisterPage.module.css';
-
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../api/axiosInstance';
 const RegisterPage: React.FC = () => {
     const {nickname, email, gender, birth} = useUserStore();
+    const navigate = useNavigate();
 
     const isValidEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,10 +35,31 @@ const RegisterPage: React.FC = () => {
         setIsModalOpen(false);
       };
     
-      const handleSubmit = () => {
-        // 회원가입 처리 로직 구현
-        console.log('회원가입 완료!');
+      const handleSubmit = async () => {
+        try {
+          const birthday = `${birth.year}-${birth.month.padStart(2, '0')}-${birth.day.padStart(2, '0')}`;
+      
+          const requestBody = {
+            username: nickname,
+            birthday,
+            gender,
+            email,
+          };
+      
+          // ✅ axios → axiosInstance
+          const response = await axiosInstance.post('/auth/semi/feature', requestBody);
+          const { accessToken, refreshToken } = response.data.data;
+      
+          localStorage.setItem('access_token', accessToken);
+          localStorage.setItem('refresh_token', refreshToken);
+      
+          navigate('/mainpage');
+        } catch (error) {
+          console.error('회원가입 실패:', error);
+          alert('회원가입 처리 중 오류가 발생했습니다.');
+        }
       };
+      
     
       const handleConfirmClick = () => {
         // 확인 버튼 클릭 시 모달을 연다.
