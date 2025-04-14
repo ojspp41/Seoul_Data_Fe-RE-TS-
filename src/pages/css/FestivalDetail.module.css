@@ -1,0 +1,129 @@
+.container {
+    padding: 20px;
+    font-family: sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 12px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    margin: 6px 0;
+}
+
+.dateRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 세로 가운데 정렬 */
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.date {
+    font-size: 12px;
+}
+
+.status {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.imageContainer {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 16px 0;
+}
+
+.festivalImage {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    background-color: #eee;
+}
+
+.websiteBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.websiteLeft {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.websiteTextBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1px;
+    /* 여기서 간격 확실하게 조정 */
+}
+
+.websiteLabel {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000000;
+    margin: 0;
+    /* 꼭 필요 */
+    line-height: 1.0;
+    /* 높이도 조정 가능 */
+}
+
+.websiteLink {
+    font-size: 12px;
+    color: #0000EE;
+    text-decoration: underline;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.iconContainer {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.iconContainer img {
+    width: 24px;
+    height: 24px;
+}
+
+.websiteImage {
+    display: flex;
+    justify-content: center;
+    /* 가운데 정렬 */
+    margin: 16px 0;
+}
+
+.websiteImage img {
+    width: 90%;
+    /* 적당한 너비, 필요 시 100%로 조절 */
+    max-width: 600px;
+    /* 너무 커지지 않게 제한 */
+    height: auto;
+    /* 비율 유지 */
+    border-radius: 10px;
+    object-fit: cover;
+    /* 이미지가 이상하게 짤릴 때 대비 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}

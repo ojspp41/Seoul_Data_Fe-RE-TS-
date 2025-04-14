@@ -1,0 +1,64 @@
+.container {
+    background-color: #ffffff;
+    padding: 16px;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  
+  .toggleIcon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .infoList {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .infoItem {
+    display: flex;
+    align-items: center; /* ✅ 중앙 정렬로 변경 */
+    gap: 12px;
+  }
+  
+  .textBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* ✅ 텍스트도 세로 정렬 */
+  }
+  
+  .icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  
+  
+  .label {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #929292;
+    margin: 4px 0 0 0;
+    white-space: pre-line;
+  }
+  

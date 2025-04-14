@@ -7,6 +7,7 @@ import Chat from '../pages/ChatList'
 import ChatRoom from '../pages/ChatRoom'
 import CreateGroupChat from '../pages/CreateGroupChat'
 import AuthRedirect from '../pages/AuthRedirect'
+import FestivalDetail from '../pages/FestivalDetail'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -39,6 +40,14 @@ export const router = createBrowserRouter([
   {
     path: '/auth/kakao/callback"',
     element: <AuthRedirect />,
-  }
+  },
+  {
+    path: '/mainpage',
+    element: <MainpageLogin />,
+  },
+  {
+    path: '/fest/detail',
+    element: <FestivalDetail />,
+  },
   
 ])
