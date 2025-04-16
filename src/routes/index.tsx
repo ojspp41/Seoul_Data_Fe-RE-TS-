@@ -38,13 +38,10 @@ export const router = createBrowserRouter([
     element: <CreateGroupChat />,
   },
   {
-    path: '/auth/kakao/callback"',
+    path: '/login-success',
     element: <AuthRedirect />,
   },
-  {
-    path: '/mainpage',
-    element: <MainpageLogin />,
-  },
+  
   {
     path: '/fest/detail',
     element: <FestivalDetail />,

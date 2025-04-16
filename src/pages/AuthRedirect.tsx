@@ -16,17 +16,26 @@ const AuthRedirect = () => {
 
     const exchangeCodeForToken = async () => {
       try {
-        const response = await axios.post(`/api/token/exchange?code=${code}`);
+        const response = await axios.post(
+          `http://13.125.224.67:8080/api/token/exchange?code=${code}`,
+          
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const { accessToken, refreshToken, role } = response.data.data;
+        console.log(role)
 
         // 토큰 저장
         localStorage.setItem('access_token', accessToken);
         localStorage.setItem('refresh_token', refreshToken);
 
         // 역할에 따라 이동
-        if (role === 'ROLE_SEMI') {
+        if (role === 'ROLE_SEMI_USER') {
           navigate('/register'); // 추가정보 입력 페이지
-        } else if (role === 'ROLE_ADMIN') {
+        } else if (role === 'ROLE_USER') {
           navigate('/mainpage'); // 메인 페이지
         } else {
           alert('알 수 없는 사용자 역할입니다.');

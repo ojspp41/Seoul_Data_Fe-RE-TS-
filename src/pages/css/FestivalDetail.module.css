@@ -1,6 +1,7 @@
 .container {
     padding: 20px;
     font-family: sans-serif;
+    background-color: #F5F5F5;
 }
 
 .header {
@@ -126,4 +127,20 @@
     object-fit: cover;
     /* 이미지가 이상하게 짤릴 때 대비 */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.locationInfoRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px; /* 필요에 따라 조정 */
+}
+
+.mapIcon {
+  margin-right: 4px; /* 아이콘과 텍스트 사이 간격 */
+}
+
+.locationText {
+  font-size: 14px;
+  font-weight: 500;
+  color: #929292;
 }

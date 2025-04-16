@@ -34,10 +34,12 @@ const RegisterPage: React.FC = () => {
       const handleModalClose = () => {
         setIsModalOpen(false);
       };
-    
+      
+      
       const handleSubmit = async () => {
         try {
           const birthday = `${birth.year}-${birth.month.padStart(2, '0')}-${birth.day.padStart(2, '0')}`;
+
       
           const requestBody = {
             username: nickname,
@@ -45,20 +47,23 @@ const RegisterPage: React.FC = () => {
             gender,
             email,
           };
-      
-          // ✅ axios → axiosInstance
-          const response = await axiosInstance.post('/auth/semi/feature', requestBody);
+          
+          const response = await axiosInstance.post('/api/auth/semi/feature', requestBody);
+          console.log(response)
           const { accessToken, refreshToken } = response.data.data;
       
+          // 🔐 새 토큰 저장 (role이 반영된 최신 토큰)
           localStorage.setItem('access_token', accessToken);
           localStorage.setItem('refresh_token', refreshToken);
       
+          // ✅ 메인 페이지로 이동
           navigate('/mainpage');
         } catch (error) {
           console.error('회원가입 실패:', error);
           alert('회원가입 처리 중 오류가 발생했습니다.');
         }
       };
+      
       
     
       const handleConfirmClick = () => {

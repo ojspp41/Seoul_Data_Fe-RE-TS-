@@ -1,5 +1,5 @@
 // components/FestivalInfo.tsx
-import React, { useState } from "react";
+import  { useState } from "react";
 import styles from "./css/FestivalInfo.module.css";
 
 interface InfoValues {
