@@ -1,27 +1,39 @@
 // ../components/EventCard.tsx
 
+// EventCard.tsx
 import React from 'react';
 import styled from 'styled-components';
 
 interface EventCardProps {
-    category: string;
-    title: string;
-    location: string;
-    dateRange: string;
+  category: string;
+  title: string;
+  location: string;
+  dateRange: string;
+  mainImg: string;
+  eventId: number; // ✅ 추가
+  onClick: (eventId: number) => void; // ✅ 추가
 }
 
-const EventCard: React.FC<EventCardProps> = (
-    {category, title, location, dateRange}
-) => {
-    return (<CardWrapper> < Thumbnail /> <EventInfo><Category> {
-        category
-    }</Category><TitleText> {
-        title
-    }</TitleText><SubInfo> 📍 {
-        location
-    }</SubInfo><SubInfo> 📅 {
-        dateRange
-    }</SubInfo></EventInfo></CardWrapper>);
+const EventCard: React.FC<EventCardProps> = ({
+  category,
+  title,
+  location,
+  dateRange,
+  mainImg,
+  eventId,
+  onClick,
+}) => {
+  return (
+    <CardWrapper onClick={() => onClick(eventId)}>
+      <Thumbnail src={mainImg} alt={title} />
+      <EventInfo>
+        <Category>{category}</Category>
+        <TitleText>{title}</TitleText>
+        <SubInfo>📍 {location}</SubInfo>
+        <SubInfo>📅 {dateRange}</SubInfo>
+      </EventInfo>
+    </CardWrapper>
+  );
 };
 
 export default EventCard;
@@ -34,13 +46,15 @@ const CardWrapper = styled.div `
   overflow: hidden;
 `;
 
-const Thumbnail = styled.div `
+// Thumbnail을 styled.img로 변경
+const Thumbnail = styled.img`
   width: 80px;
   height: 80px;
-  background-color: #d9d9d9;
+  object-fit: cover;
   flex-shrink: 0;
   border-radius: 10px;
 `;
+
 
 const EventInfo = styled.div `
   padding: 10px;

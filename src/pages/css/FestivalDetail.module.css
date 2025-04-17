@@ -90,12 +90,17 @@
 }
 
 .websiteLink {
-    font-size: 12px;
-    color: #0000EE;
+    display: inline-block;       /* 또는 block도 가능, 줄바꿈 안되게 */
+    max-width: 100%;             /* 부모 너비 기준 */
+    overflow: hidden;            /* 넘치는 부분 숨기기 */
+    white-space: nowrap;         /* 줄바꿈 금지 */
+    text-overflow: ellipsis;     /* ...으로 표시 */
+    color: #0077cc;
     text-decoration: underline;
-    margin: 0;
-    line-height: 1.2;
-}
+    vertical-align: bottom;
+  }
+  
+
 
 .iconContainer {
     display: flex;

@@ -1,20 +1,22 @@
 // ../components/UpcomingEvents.tsx
 
-import React, { useEffect, useState,useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import arrowIcon from '/assets/arrow.svg';
 import { DAYS_KR, getWeekDays, isDateInRange } from '../utils/dateUtils';
 import EventCard from './EventCard';
 import axiosInstance from '../api/axiosInstance';
+import { useNavigate } from 'react-router-dom'; // 상단에 추가
 
 interface EventType {
-  id: number;
+  eventId: number;
   category: string;
   title: string;
   guName: string;
   startDate: string;
   endDate: string;
   status: 'NOT_STARTED' | 'IN_PROGRESS' | 'ENDED';
+  mainImg:string;
 }
 // const dummyEvents: EventType[] = [
 //   {
@@ -57,6 +59,10 @@ interface EventType {
 
 const UpcomingEvents: React.FC = () => {
   const today = new Date();
+  const navigate = useNavigate(); // ✅ 라우터 이동 함수
+  const handleEventClick = (eventId: number) => {
+    navigate(`/fest/detail?eventId=${eventId}`); // ✅ 파라미터 전달 방식
+  };
   const [selectedDate, setSelectedDate] = useState(today);
   const [events, setEvents] = useState<EventType[]>([]);
   const weekDates = getWeekDays(today);
@@ -135,11 +141,14 @@ const UpcomingEvents: React.FC = () => {
           .slice(0, visibleCount) // ✅ 최대 visibleCount만큼 보여줌
           .map((event) => (
             <EventCard
-              key={event.id}
+              key={event.eventId}
               category={event.category}
               title={event.title}
               location={event.guName}
               dateRange={`${event.startDate} ~ ${event.endDate}`}
+              mainImg={event.mainImg}
+              eventId={event.eventId}
+              onClick={handleEventClick}
             />
           ))}
           
