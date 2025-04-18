@@ -11,8 +11,8 @@ const festivalMock = {
     price: "성인 40,000원, 청소년 무료",
     location: "노들섬",
     likedDefault: true,
-  };
-  
+};
+
 const MainpageLogin = () => {
     return (<div>
         <MainTopCard />

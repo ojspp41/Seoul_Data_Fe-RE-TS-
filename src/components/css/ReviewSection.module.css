@@ -1,0 +1,52 @@
+.container {
+    margin-top: 50px;
+    padding: 16px;
+    background-color: white;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  
+  .count {
+    font-size: 16px;
+    color: #8B8B8B;
+    font-weight: 700;
+  }
+  
+  .writeBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #487CEC;
+    font-size: 14px;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .moreBtn {
+    margin-top: 16px;
+    background: none;
+    border: none;
+    color: #487CEC;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  

@@ -1,0 +1,90 @@
+.page {
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    margin-top: 30px;
+  }
+  
+  .thumb {
+    width: 6px;
+    height: 12px;
+  }
+  
+  .title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+  }
+  
+  .count {
+    font-size: 14px;
+    font-weight: 700;
+    color: #8B8B8B;
+    margin-left: 6px;
+  }
+  
+  .writeBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #487CEC;
+    cursor: pointer;
+  }
+  
+  .filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .sort {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+  }
+  
+  .checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  
+  .checkboxLabel input {
+    display: none;
+  }
+  
+  .customCheckbox {
+    width: 14px;
+    height: 14px;
+    background-color: #F5F5F5;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+  }
+  
+  .checkboxLabel input:checked + .customCheckbox {
+    background-color: #487CEC;
+  }
+  
+  .photoOnlyText {
+    font-size: 14px;
+    font-weight: 500;
+    color: #040404;
+  }
+  
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
