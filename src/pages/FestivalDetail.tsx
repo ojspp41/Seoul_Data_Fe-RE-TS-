@@ -16,32 +16,51 @@ const getStatus = (start: string, end: string) => {
   if (today > endDate) return { text: "마감", color: "#888888" };
   return { text: "진행중", color: "#0900FF" };
 };
+const mockData = {
+  category: "문화예술",
+  title: "서울 봄꽃 축제 2025",
+  startDate: "2025-04-20",
+  endDate: "2025-04-30",
+  place: "여의도 한강공원",
+  useFee: "무료",
+  isFree: "무료",
+  useTarget: "전 연령",
+  player: "가수 A, 밴드 B, 퍼포먼스팀 C",
+  orgName: "서울문화재단",
+  orgLink: "https://www.seoulartsfest.kr",
+  mainImg: "https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=42afe00583eb4b0983dba37a04a41222&thumb=Y",
+  guName: "영등포구",
+  lat: "37.5285",
+  lot: "126.9243",
+  introduce:
+    "서울의 봄을 만끽할 수 있는 대표적인 야외 축제로, 다양한 문화공연과 체험 프로그램이 제공됩니다. 가족, 연인, 친구와 함께 특별한 하루를 보내보세요!",
+};
 
 export default function FestivalDetail() {
   const [searchParams] = useSearchParams();
   const eventId = searchParams.get("eventId");
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<any>(mockData);
   const navigate = useNavigate(); // ✅ 컴포넌트 내부에서
 
+  
+  // useEffect(() => {
+  //   const fetchFestivalDetail = async () => {
+  //     try {
+  //       const response = await axiosInstance.get(`/api/auth/user/event/${eventId}`);
+  //       const eventData = response.data.data;
+  //       console.log(eventData);
+  //       setData(eventData);
+  //     } catch (error) {
+  //       console.error("행사 상세 정보를 불러오지 못했습니다:", error);
+  //     }
+  //   };
 
-  useEffect(() => {
-    const fetchFestivalDetail = async () => {
-      try {
-        const response = await axiosInstance.get(`/api/auth/user/event/${eventId}`);
-        const eventData = response.data.data;
-        console.log(eventData);
-        setData(eventData);
-      } catch (error) {
-        console.error("행사 상세 정보를 불러오지 못했습니다:", error);
-      }
-    };
+  //   if (eventId) {
+  //     fetchFestivalDetail();
+  //   }
+  // }, [eventId]);
 
-    if (eventId) {
-      fetchFestivalDetail();
-    }
-  }, [eventId]);
-
-  if (!data) return <div>로딩 중...</div>;
+  // if (!data) return <div>로딩 중...</div>;
 
   const status = getStatus(data.startDate, data.endDate);
 
@@ -136,10 +155,10 @@ export default function FestivalDetail() {
       </div>
 
       {/* 상세 정보 섹션 */}
-      <FestivalInfo values={detailInfo} />
+      {/* <FestivalInfo values={detailInfo} />
       <FestivalMap lat={parseFloat(data.lot)} lng={parseFloat(data.lat)} />
 
-      <FestivalDescription content={data.introduce || "등록된 설명이 없습니다."} />
+      <FestivalDescription content={data.introduce || "등록된 설명이 없습니다."} /> */}
       <ReviewSection />
     </div>
   );

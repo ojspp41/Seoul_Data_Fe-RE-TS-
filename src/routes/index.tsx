@@ -9,6 +9,7 @@ import CreateGroupChat from '../pages/CreateGroupChat'
 import AuthRedirect from '../pages/AuthRedirect'
 import FestivalDetail from '../pages/FestivalDetail'
 import ReviewPage from '../components/ReviewPage'
+import ReviewWritePage from '../pages/ReviewWritePage'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -51,5 +52,8 @@ export const router = createBrowserRouter([
     path: '/fest/detail/review',
     element: <ReviewPage />,
   },
-  
+  {
+    path: '/fest/detail/review/write',
+    element: <ReviewWritePage  />,
+  },
 ])

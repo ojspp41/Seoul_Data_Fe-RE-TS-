@@ -1,6 +1,7 @@
 import {useState} from "react";
 import styles from "./css/ReviewSection.module.css";
 import ReviewItem from "./ReviewItem";
+import { useNavigate } from "react-router-dom";
 
 const dummyReviews = Array.from({
     length: 32
@@ -21,6 +22,7 @@ const dummyReviews = Array.from({
 
 export default function ReviewSection() {
     const [visibleCount, setVisibleCount] = useState(3);
+    const navigate = useNavigate();
 
     const handleShowMore = () => {
         setVisibleCount((prev) => prev + 3);
@@ -37,7 +39,10 @@ export default function ReviewSection() {
                     리뷰
                     <span className={styles.count}>({dummyReviews.length})</span>
                 </p>
-                <button className={styles.writeBtn}>
+                <button 
+                    className={styles.writeBtn}
+                    onClick={() => navigate("/fest/detail/review")}
+                >
                     <img src="/assets/pencil.svg" alt="리뷰 작성"/>
                     리뷰 작성하기
                 </button>
