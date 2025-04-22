@@ -1,6 +1,5 @@
-import {useState} from "react";
+import {useState, ChangeEvent} from "react";
 import styles from "./css/ReviewWritePage.module.css";
-
 import "react-calendar/dist/Calendar.css"; // 캘린더 기본 스타일 import
 import CalendarModal from "../components/CalendarModal";
 
@@ -8,12 +7,23 @@ export default function ReviewWritePage() {
     const [review, setReview] = useState("");
     const [date, setDate] = useState("");
     const [calendarOpen, setCalendarOpen] = useState(false);
+    
+    const [image, setImage] = useState<File | null>(null);
 
     const handleDateChange = (value: Date) => {
-        const formatted = value.toISOString().slice(0, 10); // yyyy-mm-dd
+        const yyyy = value.getFullYear();
+        const mm = String(value.getMonth() + 1).padStart(2, "0");
+        const dd = String(value.getDate()).padStart(2, "0");
+        const formatted = `${yyyy}-${mm}-${dd}`;
         setDate(formatted);
         setCalendarOpen(false);
     };
+    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setImage(e.target.files[0]);
+        }
+    };
+    const isFormValid = date !== "" && review.length >= 10;
 
     return (
         <div className={styles.container}>
@@ -60,13 +70,33 @@ export default function ReviewWritePage() {
 
             {/* 사진 첨부 */}
             <div className={styles.photoUpload}>
-                <button className={styles.uploadBtn}>
-                    <img src="/assets/write/plus.svg" alt="사진첨부"/>
-                    <span>사진 첨부하기</span>
-                    
-                    <span className={styles.optional}>(선택)</span>
-                </button>
+            {!image ? (
+                <label className={styles.uploadBtn}>
+                <img src="/assets/write/plus.svg" alt="사진첨부" />
+                <span>사진 첨부하기</span>
+                <span className={styles.optional}>(선택)</span>
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    hidden
+                />
+                </label>
+            ) : (
+                <div className={styles.imageInfo}>
+                <span className={styles.imageName}>{image.name}</span>
+                <img src="/assets/check.svg" alt="첨부 완료" className={styles.checkIcon} />
+                </div>
+            )}
             </div>
+
+            {/* 등록 버튼 */}
+            <button
+                className={`${styles.submitBtn} ${isFormValid ? styles.active : ""}`}
+                disabled={!isFormValid}
+            >
+                리뷰 등록하기
+            </button>
             {calendarOpen && (
                 <CalendarModal
                 onClose={() => setCalendarOpen(false)}
