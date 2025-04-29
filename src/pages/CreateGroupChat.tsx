@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './css/CreateGroupChat.module.css';
-
+import axiosInstance from '../api/axiosInstance';
 const MAX_NAME_LENGTH = 24;
 const MAX_DESC_LENGTH = 500;
 
@@ -16,9 +16,26 @@ const CreateGroupChat: React.FC = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-
   const isFormValid = name && description && selectedCategory;
-
+  const handleSubmit = async () => {
+    try {
+      const response = await axiosInstance.post('/api/auth/user/chatrooms', {
+        name,
+        type: 'GROUP',
+        information: description,
+        category: selectedCategory,
+      });
+  
+      console.log('채팅방 생성 성공:', response.data);
+  
+      // 생성 완료 후 채팅 목록 페이지로 이동
+      navigate('/chat');
+    } catch (error) {
+      console.error('채팅방 생성 실패:', error);
+      alert('채팅방 생성에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+  
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -70,6 +87,7 @@ const CreateGroupChat: React.FC = () => {
       <button
         className={`${styles.submitBtn} ${isFormValid ? styles.active : ''}`}
         disabled={!isFormValid}
+        onClick={handleSubmit} 
       >
         채팅방 만들기
       </button>
