@@ -1,6 +1,6 @@
 // components/MainTopCard.tsx
 import Slider from 'react-slick';
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import styles from './css/MainTopCard.module.css';
 import '../index.css'
 // index.tsx 또는 App.tsx에 추가
