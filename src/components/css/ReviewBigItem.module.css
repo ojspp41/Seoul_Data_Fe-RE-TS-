@@ -1,10 +1,15 @@
 .contentImg {
-    width: 100%;
-    margin: 12px auto;
-    display: block;
-    border-radius: 8px;
-    object-fit: cover;
+  width: 100%;
+  max-width: 600px;       /* ✅ 큰 화면에서 너무 커지지 않도록 */
+  height: auto;           /* ✅ 고정 높이 대신 비율 유지 */
+  aspect-ratio: 12 / 9;   /* ✅ 이미지 비율 고정 (16:9 예시) */
+  display: block;
+  margin: 12px auto;
+  border-radius: 20px;
+  object-fit: cover;
+  background-color: #f0f0f0; /* ✅ 로딩 시 배경색 */
 }
+
 
 .description {
     font-size: 12px;

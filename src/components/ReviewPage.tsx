@@ -1,35 +1,68 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import styles from "./css/ReviewPage.module.css";
 import ReviewBigItem from "./ReviewBigItem";
-
-const dummyReviews = Array.from({ length: 32 }, (_, i) => ({
-  id: i + 1,
-  name: `리뷰어${i + 1}`,
-  ageGender: `${20 + (i % 10)}세 ${i % 2 === 0 ? "남" : "여"}`,
-  visitDate: `25.04.${(i % 28 + 1).toString().padStart(2, "0")}`,
-  content: `이건 ${i + 1}번째 리뷰입니다. 행사 정말 좋았어요!`,
-  profileImg: i % 2 === 0 ? `/assets/mock/ac.svg` : null,
-}));
+import { useNavigate, useSearchParams } from "react-router-dom";
+import axiosInstance from "../api/axiosInstance";
+interface Review {
+  id: number;
+  name: string;
+  visitDate: string;
+  content: string;
+  profileImg: string | null; // 첫 번째 이미지 URL 또는 null
+}
 
 export default function ReviewPage() {
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [photoOnly, setPhotoOnly] = useState(false);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const eventId = searchParams.get("eventId");
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!eventId) return;
+      try {
+        const res = await axiosInstance.get(`/api/auth/user/events/${eventId}/reviews`);
+        const content = res.data.data.content;
+
+        const transformed = content.map((item: any) => ({
+          id: item.id,
+          name: item.memberName,
+          visitDate: new Date(item.createdAt).toLocaleDateString("ko-KR"),
+          content: item.content,
+          profileImg: item.mediaList.length > 0 ? item.mediaList[0].imageUrl : null, // string[]
+        }));
+
+        setReviews(transformed);
+      } catch (error) {
+        console.error("리뷰 불러오기 실패:", error);
+      }
+    };
+
+    fetchReviews();
+  }, [eventId]);
 
   const filteredReviews = photoOnly
-    ? dummyReviews.filter((r) => r.profileImg)
-    : dummyReviews;
+    ? reviews.filter((r) => r.profileImg !== null)
+    : reviews;
 
   return (
     <div className={styles.page}>
       {/* 헤더 */}
       <div className="">
-        <img src="/assets/slash.svg" alt="썸네일" className={styles.thumb} />
+        <img src="/assets/slash.svg" alt="썸네일" className={styles.thumb} onClick={() => navigate(-1)} />
       
       </div>
       <div className={styles.header}>
         <p className={styles.title}>
-          리뷰 <span className={styles.count}>({dummyReviews.length})</span>
+          리뷰 <span className={styles.count}>({filteredReviews.length})</span>
         </p>
-        <button className={styles.writeBtn}>
+        <button className={styles.writeBtn}
+          onClick={() => {
+            if (eventId) navigate(`/fest/detail/review/write?eventId=${eventId}`);
+            else alert("이벤트 ID가 없습니다.");
+          }}
+        >
           <img src="/assets/pencil.svg" alt="작성" />
           리뷰 작성하기
         </button>

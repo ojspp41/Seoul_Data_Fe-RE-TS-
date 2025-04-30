@@ -1,16 +1,22 @@
 
 import {Map, MapMarker} from "react-kakao-maps-sdk";
 import styles from "./css/FestivalMap.module.css";
+import { useNavigate } from 'react-router-dom';
 
 interface FestivalMapProps {
     lat: number;
     lng: number;
+    guName:string;
 }
 
-export default function FestivalMap({lat, lng} : FestivalMapProps) {
+export default function FestivalMap({lat, lng,guName} : FestivalMapProps) {
     const position = {
         lat,
         lng
+    };
+    const navigate = useNavigate();
+    const handleParkingClick = () => {
+        navigate(`/map?gu=${encodeURIComponent(guName)}`);
     };
 
     return (
@@ -28,7 +34,7 @@ export default function FestivalMap({lat, lng} : FestivalMapProps) {
                 <MapMarker position={position}/>
             </Map>
 
-            <div className={styles.parkingBox}>
+            <div className={styles.parkingBox} onClick={handleParkingClick}>
                 <img src="/assets/detail/park.svg" alt="주차 아이콘"/>
                 <span>근처 주차시설 조회하기</span>
                 <img src="/assets/detail/slash.svg" alt="구분선"/>

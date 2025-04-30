@@ -2,6 +2,7 @@
     background-color: #7B7B7B;
     padding: 20px;
     text-align: center;
+    margin-bottom: 30px;
   }
   
   /* 슬라이더 마진 조절 */
@@ -76,4 +77,10 @@
     border-radius: 12px;
   }
   
-  
+  .emptyMessage {
+  text-align: center;
+  padding: 60px 0;
+  color: #e9e4e4;
+  font-size: 18px;
+  border-radius: 12px;
+}
