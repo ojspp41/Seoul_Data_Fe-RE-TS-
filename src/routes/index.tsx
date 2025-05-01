@@ -10,6 +10,7 @@ import AuthRedirect from '../pages/AuthRedirect'
 import FestivalDetail from '../pages/FestivalDetail'
 import ReviewPage from '../components/ReviewPage'
 import ReviewWritePage from '../pages/ReviewWritePage'
+import FestivalAllPage from '../pages/FestivalAllPage'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -55,5 +56,9 @@ export const router = createBrowserRouter([
   {
     path: '/fest/detail/review/write',
     element: <ReviewWritePage  />,
+  },
+  {
+    path: '/fest/all',
+    element: <FestivalAllPage  />,
   },
 ])

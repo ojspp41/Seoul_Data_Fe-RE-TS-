@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom'; // ✅ 추가
 interface FestivalCardProps {
+  eventId: number;
   commentCount: number;
   mainText: string;
   subText: string;
@@ -10,9 +11,11 @@ interface FestivalCardProps {
   price: string;
   location: string;
   likedDefault?: boolean;
+  mainImg?: string; // ✅ 추가
 }
 
 const FestivalCard = ({
+  eventId,
   commentCount,
   mainText,
   subText,
@@ -21,12 +24,17 @@ const FestivalCard = ({
   price,
   location,
   likedDefault = false,
-}: FestivalCardProps) => {
+  mainImg,
+}: FestivalCardProps & { mainImg?: string }) => {
   const [liked, setLiked] = useState(likedDefault);
+  const navigate = useNavigate(); 
 
+  const handleClick = () => {
+    navigate(`/fest/detail?eventId=${eventId}`); 
+  };
   return (
     <>
-      <CardWrapper>
+      <CardWrapper $background={mainImg} onClick={handleClick}>
         <CommentBadge>댓글 {commentCount}개</CommentBadge>
 
         <ContentWrapper>
@@ -62,18 +70,43 @@ const FestivalCard = ({
 export default FestivalCard;
 
 
-const CardWrapper = styled.div`
+const CardWrapper = styled.div<{ $background?: string }>`
+  position: relative;
   border-radius: 16px;
   padding: 16px;
   width: calc(100% - 40px);
   margin: 0 auto;
-  position: relative;
-  background-color: #A9A9A9;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   height: 360px;
+  overflow: hidden;
+  color: white;
+  cursor: pointer;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: ${({ $background }) =>
+      $background
+        ? `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${$background})`
+        : 'none'};
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 0;
+    transition: background-image 0.3s ease-in-out;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 `;
+
+
+
 
 const CommentBadge = styled.div`
   position: absolute;
@@ -93,10 +126,15 @@ const ContentWrapper = styled.div`
 `;
 
 const MainText = styled.div`
-  color: #FFFFFF;
+  color: rgb(0, 0, 0);
   font-weight: 600;
   font-size: 24px;
+
+  white-space: nowrap;           // 줄바꿈 없이 한 줄로
+  overflow: hidden;              // 넘치는 부분 숨기기
+  text-overflow: ellipsis;       // 넘친 텍스트 ... 처리
 `;
+
 
 const SubText = styled.div`
   color: rgba(255, 255, 255, 0.5);
@@ -132,10 +170,10 @@ const FestivalName = styled.div`
 `;
 
 const InfoWrapper = styled.div`
-  background-color: #FFFFFF;
+  background-color:rgb(255, 255, 255);
   padding: 16px;
   width: calc(100% - 40px);
-  margin: 0 auto;
+  margin: 0 auto ;
   border-radius: 0 0 16px 16px;
 `;
 

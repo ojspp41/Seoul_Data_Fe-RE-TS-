@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'; // ✅ 상단�
 import axiosInstance from "../api/axiosInstance";
 import ReviewSection from "../components/ReviewSection";
 import useFestivalStore from "../store/useFestivalStore";
+import CommentSection from "../components/CommentSection";
 // 🔸 상태 계산 함수
 const getStatus = (start: string, end: string) => {
   const today = new Date();
@@ -144,6 +145,7 @@ export default function FestivalDetail() {
       <FestivalMap lat={parseFloat(data.lot)} lng={parseFloat(data.lat)} guName={data.guName} />
 
       <FestivalDescription content={data.introduce || "등록된 설명이 없습니다."} />
+      <CommentSection eventId={eventId!}/>
       <ReviewSection eventId={eventId!} />
     </div>
   );

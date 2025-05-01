@@ -69,11 +69,15 @@ const Category = styled.div `
   font-weight: 500;
 `;
 
-const TitleText = styled.div `
+const TitleText = styled.div`
   font-size: 14px;
   font-weight: 600;
   margin: 4px 0;
   color: #000;
+
+  white-space: nowrap;       /* 줄바꿈 없이 한 줄 */
+  overflow: hidden;          /* 넘치는 텍스트 숨기기 */
+  text-overflow: ellipsis;   /* 넘치는 부분 ...으로 표시 */
 `;
 
 const SubInfo = styled.div `

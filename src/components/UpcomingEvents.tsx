@@ -110,7 +110,7 @@ const UpcomingEvents: React.FC = () => {
       <Header>
         <Title>다가오는 행사 일정</Title>
         <SeeAll>
-          <SeeAllText>전체보기</SeeAllText>
+          <SeeAllText onClick={() => navigate('/fest/all')}>전체보기</SeeAllText>
           <ArrowIcon src={arrowIcon} alt="arrow" />
         </SeeAll>
       </Header>

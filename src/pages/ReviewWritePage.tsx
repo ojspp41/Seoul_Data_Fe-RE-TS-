@@ -69,7 +69,7 @@ export default function ReviewWritePage() {
           const payload = {
             eventId: numericEventId,
             content: review,
-            rating: 2.00,
+            rating: Number(rating).toFixed(2),
             mediaList,
           };
       
