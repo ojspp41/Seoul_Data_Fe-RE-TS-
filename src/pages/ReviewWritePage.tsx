@@ -107,7 +107,8 @@ export default function ReviewWritePage() {
         <div className={styles.container}>
             {/* 헤더 */}
             <div className={styles.header}>
-                <img src="/assets/slash.svg" alt="뒤로가기" className={styles.backIcon} />
+                <img src="/assets/slash.svg" alt="뒤로가기" 
+                className={styles.backIcon}  onClick={() => navigate(-1)} />
             </div>
 
             {/* 행사 정보 */}

@@ -90,3 +90,28 @@
   .writeButton{
     margin-left: auto;
   }
+  .replyList {
+  margin-left: 20px;
+  padding-left: 10px;
+  border-left: 2px solid #eee;
+  margin-top: 8px;
+}
+
+.replyItem {
+  margin-bottom: 8px;
+}
+
+.replyText {
+  font-size: 14px;
+  color: #444;
+}
+
+.toggleRepliesBtn {
+  margin-left: 8px;
+  font-size: 12px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+}
+

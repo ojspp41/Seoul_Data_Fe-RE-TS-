@@ -29,10 +29,8 @@ const MainpageLogin = () => {
           size: 5,
         },
       });
-
       const newEvents = response.data.data.content;
       setFestivals(prev => [...prev, ...newEvents]);
-
       // 더 이상 로드할 게 없으면 중단
       if (newEvents.length < 5) setHasMore(false);
     } catch (error) {
@@ -80,7 +78,7 @@ const MainpageLogin = () => {
             dateRange={`${festival.startDate} ~ ${festival.endDate}`}
             price={festival.isFree === '무료' ? '무료' : '유료'}
             location={festival.guName}
-            likedDefault={festival.favorites > 0}
+            likedDefault={festival.likes}
             mainImg={festival.mainImg}
             />
         </FestivalCardWrapper>

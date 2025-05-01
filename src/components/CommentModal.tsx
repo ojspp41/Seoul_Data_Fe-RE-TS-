@@ -4,11 +4,13 @@ import axiosInstance from '../api/axiosInstance';
 
 interface CommentModalProps {
   eventId: string;
+  parentCommentId?: number; // optional
   onClose: () => void;
   onSubmitSuccess?: () => void;
 }
 
-export default function CommentModal({ eventId, onClose, onSubmitSuccess }: CommentModalProps) {
+
+export default function CommentModal({ eventId,parentCommentId, onClose, onSubmitSuccess }: CommentModalProps) {
   const [comment, setComment] = useState('');
 
   const handleSubmit = async () => {
@@ -18,7 +20,9 @@ export default function CommentModal({ eventId, onClose, onSubmitSuccess }: Comm
       await axiosInstance.post('/api/auth/user/event/comment', {
         eventId,
         content: comment.trim(),
+        ...(parentCommentId && { parentCommentId }), // 조건부 포함
       });
+      
       onSubmitSuccess?.();
       onClose();
     } catch (error) {
@@ -33,7 +37,9 @@ export default function CommentModal({ eventId, onClose, onSubmitSuccess }: Comm
         onClick={(e) => e.stopPropagation()} // ✅ 모달 내부 클릭은 이벤트 버블링 차단
       >
         <button className={styles.closeButton} onClick={onClose}>✕</button>
-
+        <h2 className={styles.modalTitle}>
+          {parentCommentId ? '답글 작성' : '댓글 작성'}
+        </h2>
         <textarea
           className={styles.textarea}
           placeholder={`행사에 대해 기대하는 점

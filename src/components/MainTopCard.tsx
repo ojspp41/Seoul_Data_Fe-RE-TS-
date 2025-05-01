@@ -33,7 +33,6 @@ const MainTopCard = () => {
       try {
         const response = await axiosInstance.get('/api/auth/user/event/recommend');
         const data = response.data;
-        console.log(data);
         const mappedData: CardItem[] = data.map((item: any) => ({
           mainText: item.title,
           subText: item.category,

@@ -1,201 +1,170 @@
 // src/pages/ChatRoom.tsx
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from './css/ChatRoom.module.css';
 import ChatMessage from '../components/ChatMessage';
-interface ChatMessageData {
-    id: number;
-    sender: 'me' | 'other';
-    message: string;
-    time: string;
-}
+import { useParams } from 'react-router-dom';
+import {
+  connectStomp,
+  sendChatMessage,
+  subscribeToRoom,
+  disconnectStomp,
+} from '../utils/socket';
 
-const chatMessages: ChatMessageData[] = [
-    {
-        id: 1,
-        sender: "me",
-        message: "안녕하세요!",
-        time: "10:00"
-    }, {
-        id: 2,
-        sender: "other",
-        message: "반갑습니다 :)",
-        time: "10:01"
-    }, {
-        id: 3,
-        sender: "me",
-        message: "오늘 날씨 좋네요",
-        time: "10:02"
-    }, {
-        id: 4,
-        sender: "other",
-        message: "네! 산책 가고 싶어요",
-        time: "10:03"
-    }, {
-        id: 5,
-        sender: "me",
-        message: "보통 주말에 뭐 하세요?",
-        time: "10:04"
-    }, {
-        id: 6,
-        sender: "other",
-        message: "카페 가거나 영화 봐요!",
-        time: "10:05"
-    }, {
-        id: 7,
-        sender: "me",
-        message: "오 저도 영화 좋아해요. 최근에 뭐 보셨어요?",
-        time: "10:06"
-    }, {
-        id: 8,
-        sender: "other",
-        message: "‘듄 2’ 봤어요! 너무 재밌었어요",
-        time: "10:07"
-    }, {
-        id: 9,
-        sender: "me",
-        message: "오 저도 그거 궁금했는데 평이 좋더라고요",
-        time: "10:08"
-    }, {
-        id: 10,
-        sender: "other",
-        message: "액션이랑 음악이 진짜 대박이에요",
-        time: "10:09"
-    }, {
-        id: 11,
-        sender: "me",
-        message: "좋아요! 이번 주말에 꼭 볼게요",
-        time: "10:10"
-    }, {
-        id: 12,
-        sender: "me",
-        message: "혹시 좋아하는 음식 있으세요?",
-        time: "10:11"
-    }, {
-        id: 13,
-        sender: "other",
-        message: "요즘 초밥에 꽂혔어요 🍣",
-        time: "10:12"
-    }, {
-        id: 14,
-        sender: "me",
-        message: "헉 저도! 연어초밥 최고죠",
-        time: "10:13"
-    }, {
-        id: 15,
-        sender: "other",
-        message: "ㅋㅋㅋ 완전 동감입니다!",
-        time: "10:14"
-    }, {
-        id: 16,
-        sender: "me",
-        message: "혹시 취미는 뭐예요?",
-        time: "10:15"
-    }, {
-        id: 17,
-        sender: "other",
-        message: "그림 그리는 거요. 힐링돼요",
-        time: "10:16"
-    }, {
-        id: 18,
-        sender: "me",
-        message: "멋지다! 언젠가 작품도 보여주세요",
-        time: "10:17"
-    }, {
-        id: 19,
-        sender: "other",
-        message: "기회 되면 꼭 보여드릴게요 😊",
-        time: "10:18"
-    }, {
-        id: 20,
-        sender: "me",
-        message: "좋은 하루 보내세요~",
-        time: "10:19"
-    }, {
-        id: 21,
-        sender: "other",
-        message: "네! 오늘도 파이팅이에요 💪",
-        time: "10:20"
-    }
-];
-const roomTitle = "오버클락도 락";
-const participantCount = 23;
+interface ChatMessageData {
+  id: number;
+  sender: 'me' | 'other';
+  message: string;
+  time: string;
+}
 
 const ChatRoom: React.FC = () => {
-    const [focused, setFocused] = useState(false);
-    const [inputValue, setInputValue] = useState('');
-    const chatBodyRef = useRef < HTMLDivElement | null > (null);
+  const [focused, setFocused] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [messages, setMessages] = useState<ChatMessageData[]>([]);
+  const chatBodyRef = useRef<HTMLDivElement | null>(null);
+  const { roomId } = useParams();
+  const roomTitle = '오버클락도 락'; // TODO: 서버에서 받아오도록 변경
+  const participantCount = 23;
 
-    useEffect(() => {
-        if (chatBodyRef.current) {
-            chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
-        }
-    }, [chatMessages.length]);
+  useEffect(() => {
+    let unsubscribe: any;
 
-    return (
-        <div>
-            <div className={styles["chat-header"]}>
-                <img src="/assets/slash.svg" alt="뒤로가기" className={styles["header-icon"]} />
+    const connect = async () => {
+      try {
+        const stomp = await connectStomp();
 
-                <div className={styles["header-title"]}>
-                    <div className={styles["room-name"]}>{roomTitle}</div>
-                    <div className={styles["participant-info"]}>
-                    <img src="/assets/person.svg" alt="인원수" className={styles["person-icon"]} />
-                    <span className={styles["participant-count"]}>{participantCount}명</span>
-                    </div>
-                </div>
+        // 1. 채팅방 입장
+        stomp.send(
+          '/app/chat/room/enter',
+          {},
+          JSON.stringify({
+            chatRoomId: Number(roomId),
+          })
+        );
 
-                <img src="/assets/hambuger.svg" alt="메뉴" className={styles["header-icon"]} />
-            </div>
+        // 2. 채팅 수신 구독
+        unsubscribe = subscribeToRoom(roomId!, (message) => {
+          const body = JSON.parse(message.body);
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: Date.now(), // TODO: 서버에서 ID 제공 시 변경
+              sender: body.sender === 'ME' ? 'me' : 'other',
+              message: body.content,
+              time:
+                body.time ||
+                new Date().toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                }),
+            },
+          ]);
+        });
+      } catch (err) {
+        console.error('💥 WebSocket 연결 실패:', err);
+      }
+    };
 
+    connect();
 
-            <div className={styles['chat-body']} ref={chatBodyRef}>
-                {
-                    chatMessages.map((chat) => (
-                        <ChatMessage
-                            key={chat.id}
-                            sender={chat.sender}
-                            message={chat.message}
-                            time={chat.time}/>
-                    ))
-                }
-            </div>
-            <div className={styles['chat-input-container']}>
-                <div
-                    className={`${styles['chat-input-box']} ${
-                    focused || inputValue.length > 0
-                        ? styles['focused']
-                        : ''}`}
-                    onClick={() => setFocused(true)}>
-                    <textarea
-                        placeholder="메세지를 입력해주세요.."
-                        className={styles['chat-input']}
-                        rows={1}
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        onFocus={() => setFocused(true)}
-                        onBlur={() => setFocused(false)}
-                        onInput={(e) => {
-                            const target = e.target as HTMLTextAreaElement;
-                            target.style.height = 'auto';
-                            target.style.height = `${target.scrollHeight}px`;
-                        }}/>
-                    <div
-                        className={`${styles['send-button']} ${
-                        focused || inputValue.length > 0
-                            ? styles['active']
-                            : ''}`}>
-                        <img
-                            src={focused || inputValue.length > 0
-                                ? '/assets/send-active.svg'
-                                : '/assets/send-icon.svg'
-}
-                            alt="send"
-                            className={styles['send-icon']}/>
-                    </div>
-                </div>
-            </div>
+    return () => {
+      unsubscribe?.unsubscribe();
+      disconnectStomp();
+    };
+  }, [roomId]);
+
+  useEffect(() => {
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleSend = () => {
+    if (!inputValue.trim()) return;
+    sendChatMessage(Number(roomId), inputValue, 'TEXT');
+    setInputValue('');
+  };
+
+  return (
+    <div>
+      <div className={styles['chat-header']}>
+        <img
+          src="/assets/slash.svg"
+          alt="뒤로가기"
+          className={styles['header-icon']}
+        />
+        <div className={styles['header-title']}>
+          <div className={styles['room-name']}>{roomTitle}</div>
+          <div className={styles['participant-info']}>
+            <img
+              src="/assets/person.svg"
+              alt="인원수"
+              className={styles['person-icon']}
+            />
+            <span className={styles['participant-count']}>
+              {participantCount}명
+            </span>
+          </div>
         </div>
-    );
+        <img
+          src="/assets/hambuger.svg"
+          alt="메뉴"
+          className={styles['header-icon']}
+        />
+      </div>
+
+      <div className={styles['chat-body']} ref={chatBodyRef}>
+        {messages.map((chat) => (
+          <ChatMessage
+            key={chat.id}
+            sender={chat.sender}
+            message={chat.message}
+            time={chat.time}
+          />
+        ))}
+      </div>
+
+      <div className={styles['chat-input-container']}>
+        <div
+          className={`${styles['chat-input-box']} ${
+            focused || inputValue.length > 0 ? styles['focused'] : ''
+          }`}
+          onClick={() => setFocused(true)}
+        >
+          <textarea
+            placeholder="메세지를 입력해주세요.."
+            className={styles['chat-input']}
+            rows={1}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            onInput={(e) => {
+              const target = e.target as HTMLTextAreaElement;
+              target.style.height = 'auto';
+              target.style.height = `${target.scrollHeight}px`;
+            }}
+          />
+          <div
+            className={`${styles['send-button']} ${
+              focused || inputValue.length > 0 ? styles['active'] : ''
+            }`}
+            onClick={handleSend}
+          >
+            <img
+              src={
+                focused || inputValue.length > 0
+                  ? '/assets/send-active.svg'
+                  : '/assets/send-icon.svg'
+              }
+              alt="send"
+              className={styles['send-icon']}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ChatRoom;

@@ -1,14 +1,14 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./css/FestivalDetail.module.css";
 import FestivalInfo from "../components/FestivalInfo";
 import FestivalMap from "../components/FestivalMap";
 import FestivalDescription from "../components/FestivalDescription";
-import { useNavigate, useSearchParams } from 'react-router-dom'; // ✅ 상단에 추가
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axiosInstance from "../api/axiosInstance";
 import ReviewSection from "../components/ReviewSection";
 import useFestivalStore from "../store/useFestivalStore";
 import CommentSection from "../components/CommentSection";
-// 🔸 상태 계산 함수
+
 const getStatus = (start: string, end: string) => {
   const today = new Date();
   const startDate = new Date(start);
@@ -19,25 +19,26 @@ const getStatus = (start: string, end: string) => {
   return { text: "진행중", color: "#0900FF" };
 };
 
-
 export default function FestivalDetail() {
   const [searchParams] = useSearchParams();
   const eventId = searchParams.get("eventId");
   const { setEventId, setEventData } = useFestivalStore();
   const [data, setData] = useState<any>();
-  const navigate = useNavigate(); // ✅ 컴포넌트 내부에서
+  const [liked, setLiked] = useState(false);
+  const [favorited, setFavorited] = useState(false);
+  const navigate = useNavigate();
 
-  
   useEffect(() => {
     if (!eventId) return;
-    setEventId(eventId); // ✅ 전역 저장
+    setEventId(eventId);
 
     const fetchFestivalDetail = async () => {
       try {
         const response = await axiosInstance.get(`/api/auth/user/event/${eventId}`);
         const eventData = response.data.data;
         setData(eventData);
-        setEventData(eventData); // ✅ 전역 저장
+        setEventData(eventData);
+        console.log("eventData",eventData)
       } catch (error) {
         console.error("행사 상세 정보를 불러오지 못했습니다:", error);
       }
@@ -45,6 +46,13 @@ export default function FestivalDetail() {
 
     fetchFestivalDetail();
   }, [eventId, setEventId, setEventData]);
+
+  useEffect(() => {
+    if (data) {
+      setLiked(data.likes === 1);
+      setFavorited(data.favorites === 1);
+    }
+  }, [data]);
 
   if (!data) return <div>로딩 중...</div>;
 
@@ -59,14 +67,39 @@ export default function FestivalDetail() {
     buliding: data.orgName || "기관 정보 없음",
   };
 
+  const toggleLike = async () => {
+    try {
+      if (liked) {
+        await axiosInstance.delete(`/api/auth/user/event/like/${eventId}`);
+      } else {
+        await axiosInstance.post(`/api/auth/user/event/like/${eventId}`);
+      }
+      setLiked(!liked);
+    } catch (error) {
+      console.error("좋아요 처리 실패:", error);
+    }
+  };
+
+  const toggleFavorite = async () => {
+    try {
+      if (favorited) {
+        await axiosInstance.delete(`/api/auth/user/event/favorite/${eventId}`);
+      } else {
+        await axiosInstance.post(`/api/auth/user/event/favorite/${eventId}`);
+      }
+      setFavorited(!favorited);
+    } catch (error) {
+      console.error("즐겨찾기 처리 실패:", error);
+    }
+  };
+
   return (
     <div className={styles.container}>
-      {/* 헤더 */}
       <div className={styles.header}>
         <img
           src="/assets/back.svg"
           alt="Back"
-          onClick={() => navigate(-1)} // ✅ 이전 페이지로 이동
+          onClick={() => navigate(-1)}
           className={styles.backIcon}
         />
         <img src="/assets/more.svg" alt="More" />
@@ -75,13 +108,11 @@ export default function FestivalDetail() {
       <p className={styles.subtitle}>{data.category}</p>
       <h1 className={styles.title}>{data.title}</h1>
 
-      {/* 위치 */}
       <div className={styles.locationInfoRow}>
         <img src="/assets/detail/map.svg" alt="Map Icon" className={styles.mapIcon} />
         <span className={styles.locationText}>{data.guName || "어디구 있지도 있어"}</span>
       </div>
 
-      {/* 날짜 및 상태 */}
       <div className={styles.dateRow}>
         <span className={styles.date}>
           {data.startDate.replace(/-/g, ".")} ~ {data.endDate.replace(/-/g, ".")}
@@ -103,32 +134,38 @@ export default function FestivalDetail() {
         </span>
       </div>
 
-      {/* 하트/별/공유 아이콘 */}
       <div className={styles.iconContainer}>
-        <img src="/assets/hart.svg" alt="Heart Icon" />
-        <img src="/assets/star.svg" alt="Star Icon" />
+        <img
+          src={liked ? "/assets/hart-fill.svg" : "/assets/hart.svg"}
+          alt="Heart Icon"
+          onClick={toggleLike}
+          className={styles.icon}
+        />
+        <img
+          src={favorited ? "/assets/star-fill.svg" : "/assets/star.svg"}
+          alt="Star Icon"
+          onClick={toggleFavorite}
+          className={styles.icon}
+        />
         <img src="/assets/send.svg" alt="Send Icon" />
       </div>
 
-      {/* 이미지 */}
       <div className={styles.websiteImage}>
         <img src={data.mainImg} alt="Festival Cover" />
       </div>
 
-      {/* 웹사이트 */}
       <div className={styles.websiteBox}>
         <div className={styles.websiteLeft}>
           <img src="/assets/earth.svg" alt="Earth Icon" />
           <div className={styles.websiteTextBox}>
             <p className={styles.websiteLabel}>웹사이트 방문</p>
-            <a 
+            <a
               href={data.orgLink}
               className={styles.websiteLink}
               target="_blank"
               rel="noopener noreferrer"
-              title={data.orgLink} // 마우스 오버 시 전체 URL 표시
-            >
-            </a>
+              title={data.orgLink}
+            ></a>
           </div>
         </div>
         <img
@@ -137,15 +174,12 @@ export default function FestivalDetail() {
           onClick={() => window.open(data.orgLink, "_blank")}
           className={styles.slashIcon}
         />
-
       </div>
 
-      {/* 상세 정보 섹션 */}
       <FestivalInfo values={detailInfo} />
       <FestivalMap lat={parseFloat(data.lot)} lng={parseFloat(data.lat)} guName={data.guName} />
-
       <FestivalDescription content={data.introduce || "등록된 설명이 없습니다."} />
-      <CommentSection eventId={eventId!}/>
+      <CommentSection eventId={eventId!} />
       <ReviewSection eventId={eventId!} />
     </div>
   );

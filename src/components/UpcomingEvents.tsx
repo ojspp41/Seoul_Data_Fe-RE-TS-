@@ -92,7 +92,6 @@ const UpcomingEvents: React.FC = () => {
             size: 1280,
           }
         });
-        console.log( response.data.data.content)
         const allEvents: EventType[] = response.data.data.content;
         setEvents(allEvents);
       } catch (error) {

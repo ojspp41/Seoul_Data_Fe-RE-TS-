@@ -16,10 +16,16 @@ interface CommentSectionProps {
   eventId: string;
 }
 
+
 export default function CommentSection({ eventId }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+  const [replyModalOpen, setReplyModalOpen] = useState(false);
+  const [targetCommentId, setTargetCommentId] = useState<number | null>(null);
+  const [openReplies, setOpenReplies] = useState<Record<number, boolean>>({});
+
+
   const fetchComments = async () => {
     try {
       const response = await axiosInstance.get(`/api/auth/user/event/comment`, {
@@ -30,6 +36,7 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
       console.error('댓글 불러오기 실패:', err);
     }
   };
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -58,36 +65,88 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
       </div>
 
       {/* 댓글 목록 (3개만 보여줌) */}
-      {comments.slice(0, 3).map((comment) => (
-        <div key={comment.commentId} className={styles.commentItem}>
-          <div className={styles.commentText}>{comment.content}</div>
+      {comments.slice(0, 3).map((comment) => {
+        const isOpen = openReplies[comment.commentId]; // 펼침 여부 상태
 
-          <div className={styles.metaRow}>
-            <div className={styles.metaLeft}>
-              <img src="/assets/dislike.svg" alt="싫어요" />
-              <span className={styles.dislikeCount}>{comment.replies.length}</span>
-              
+        return (
+          <div key={comment.commentId} className={styles.commentItem}>
+            <div className={styles.commentText}>{comment.content}</div>
+
+            <div
+              className={styles.metaRow}
+              onClick={() => {
+                setTargetCommentId(comment.commentId);
+                setReplyModalOpen(true);
+              }}
+            >
+              <div className={styles.metaLeft}>
+                <img src="/assets/dislike.svg" alt="싫어요" />
+                <span className={styles.dislikeCount}>{comment.replies.length}</span>
+              </div>
+              <div className={styles.metaRight}>
+                <span className={styles.time}>· {formatDate(comment.createdAt)}</span>
+                <span className={styles.writer}>· 사용자{comment.memberId}</span>
+                <button
+                  className={styles.toggleRepliesBtn}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenReplies((prev) => ({
+                      ...prev,
+                      [comment.commentId]: !prev[comment.commentId],
+                    }));
+                  }}
+                >
+                  {isOpen ? "답글 숨기기" : "답글 보기"}
+                </button>
+              </div>
             </div>
-            <div className={styles.metaRight}>
-              <span className={styles.time}>· {formatDate(comment.createdAt)}</span>
-              <span className={styles.writer}>· 사용자{comment.memberId}</span>
-            </div>
+
+            {/* ✅ 대댓글 목록 펼치기 */}
+            {isOpen && comment.replies.length > 0 && (
+              <div className={styles.replyList}>
+                {comment.replies.map((reply) => (
+                  <div key={reply.commentId} className={styles.replyItem}>
+                    <div className={styles.replyText}>{reply.content}</div>
+                    <div className={styles.metaRight}>
+                      <span className={styles.time}>· {formatDate(reply.createdAt)}</span>
+                      <span className={styles.writer}>· 사용자{reply.memberId}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      ))}
+        );
+      })}
+
 
       <button className={styles.moreButton}>댓글 더보기</button>
       
+      {/* 일반 댓글 작성 모달 */}
       {isModalOpen && (
         <CommentModal
           eventId={eventId}
           onClose={() => setIsModalOpen(false)}
           onSubmitSuccess={() => {
-            fetchComments(); // 작성 후 목록 갱신
+            fetchComments();
             setIsModalOpen(false);
           }}
         />
       )}
+
+      {/* 대댓글 작성 모달 */}
+      {replyModalOpen && targetCommentId !== null && (
+        <CommentModal
+          eventId={eventId}
+          parentCommentId={targetCommentId} // ✅ 여기 추가
+          onClose={() => setReplyModalOpen(false)}
+          onSubmitSuccess={() => {
+            fetchComments();
+            setReplyModalOpen(false);
+          }}
+        />
+      )}
+
     </div>
   );
 }

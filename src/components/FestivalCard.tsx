@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // ✅ 추가
+import axiosInstance from '../api/axiosInstance';
 interface FestivalCardProps {
   eventId: number;
   commentCount: number;
@@ -23,12 +24,27 @@ const FestivalCard = ({
   dateRange,
   price,
   location,
-  likedDefault = false,
+  likedDefault ,
   mainImg,
 }: FestivalCardProps & { mainImg?: string }) => {
   const [liked, setLiked] = useState(likedDefault);
   const navigate = useNavigate(); 
+  const handleToggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation(); // 카드 전체 클릭 방지
+  
+    try {
+      if (liked) {
+        await axiosInstance.delete(`/api/auth/user/event/like/${eventId}`);
+      } else {
+        await axiosInstance.post(`/api/auth/user/event/like/${eventId}`);
+      }
+      setLiked(!liked);
+    } catch (error) {
+      console.error("좋아요 요청 실패:", error);
+    }
+  };
 
+  
   const handleClick = () => {
     navigate(`/fest/detail?eventId=${eventId}`); 
   };
@@ -42,9 +58,9 @@ const FestivalCard = ({
           <SubText>{subText}</SubText>
         </ContentWrapper>
 
-        <HeartButton onClick={() => setLiked(!liked)}>
+        <HeartButton onClick={handleToggleLike}>
           <img
-            src={liked ? '/assets/heart.svg' : '/assets/heart.svg'}
+            src={liked ? '/assets/heart-fill.svg' : '/assets/heart.svg'}
             alt="하트 버튼"
           />
         </HeartButton>
