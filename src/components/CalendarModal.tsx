@@ -20,7 +20,7 @@ export default function CalendarModal({ onClose, onSelectDate }: CalendarModalPr
             calendarType="gregory"
             prevLabel="<"
             nextLabel=">"
-            formatMonthYear={(locale, date) =>
+            formatMonthYear={(_, date) =>
                 `${date.getFullYear()}년 ${date.getMonth() +1}월`
             }
         />
