@@ -1,19 +1,14 @@
-import { CompatClient, Stomp, IFrame, messageCallbackType } from '@stomp/stompjs';
+// src/utils/socket.ts
+import SockJS from 'sockjs-client';
+import { CompatClient, Stomp, IFrame ,IMessage } from '@stomp/stompjs';
 
 let stompClient: CompatClient | null = null;
 
 export const connectStomp = (): Promise<CompatClient> => {
   return new Promise((resolve, reject) => {
-    if (stompClient && stompClient.connected) {
-      resolve(stompClient);
-      return;
-    }
-
     const accessToken = localStorage.getItem('access_token');
-    const webSocketUrl = 'ws://13.125.224.67:8080/ws/websocket';
-
-    stompClient = Stomp.over(() => new WebSocket(webSocketUrl));
-    stompClient.reconnectDelay = 5000;
+    const socket = new SockJS('http://13.125.224.67:8080/ws-stomp');
+    stompClient = Stomp.over(socket);
 
     stompClient.connect(
       { Authorization: `Bearer ${accessToken}` },
@@ -29,40 +24,63 @@ export const connectStomp = (): Promise<CompatClient> => {
   });
 };
 
+export const sendEnterMessage = (chatRoomId: number) => {
+  if (!stompClient || !stompClient.connected) {
+    console.warn('⚠️ 입장 메시지 전송 실패: STOMP 클라이언트가 연결되지 않았습니다.');
+    return;
+  }
+
+  stompClient.send(`/app/chat/room/${chatRoomId}/enter`, {}, '');
+};
+
+// ✅ 퇴장 메시지 전송 함수 추가
+export const sendLeaveMessage = (chatRoomId: number) => {
+  if (!stompClient || !stompClient.connected) {
+    console.warn('⚠️ 퇴장 메시지 전송 실패: STOMP 클라이언트가 연결되지 않았습니다.');
+    return;
+  }
+
+  stompClient.send(`/app/chat/room/${chatRoomId}/leave`, {}, '');
+};
+
+// ✅ 연결 해제 함수 (옵션)
 export const disconnectStomp = () => {
   if (stompClient && stompClient.connected) {
     stompClient.disconnect(() => {
-      console.log('🔌 WebSocket 연결 해제');
+      console.log('🛑 WebSocket 연결 종료');
     });
   }
 };
 
-export const subscribeToRoom = (
-  roomId: string | number,
-  callback: messageCallbackType
-) => {
-  if (!stompClient) return;
-
-  return stompClient.subscribe(`/sub/chat/room/${roomId}`, callback);
-};
-
+// src/utils/socket.ts 내부에 추가
 export const sendChatMessage = (
-  roomId: number,
+  chatRoomId: number,
   content: string,
   type: 'TEXT' | 'IMAGE' | 'FILE' = 'TEXT',
   tempS3Key: string | null = null
 ) => {
   if (!stompClient || !stompClient.connected) {
-    console.error('❌ WebSocket 연결되지 않음');
+    console.warn('⚠️ 채팅 메시지 전송 실패: STOMP 클라이언트가 연결되지 않았습니다.');
     return;
   }
 
   const messagePayload = {
-    chatRoomId: roomId,
+    chatRoomId,
     content,
     type,
-    tempS3Key: tempS3Key ?? '',
+    tempS3Key,
   };
 
-  stompClient.send('/app/chat/message', {}, JSON.stringify(messagePayload));
+  stompClient.send(
+    '/app/chat/message',
+    {},
+    JSON.stringify(messagePayload)
+  );
+};
+export const subscribeToRoom = (
+  chatRoomId: number,
+  callback: (message: IMessage) => void
+) => {
+  if (!stompClient || !stompClient.connected) return;
+  return stompClient.subscribe(`/topic/chat/room/${chatRoomId}`, callback);
 };

@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
     element: <Chat />,
   },
   {
-    path: '/chat/room/:id',
+    path: '/chat/room/:roomId',
     element: <ChatRoom />,
   },
   {

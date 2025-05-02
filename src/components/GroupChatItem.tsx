@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './css/GroupChatItem.module.css';
 import { useNavigate } from 'react-router-dom';
-import { connectStomp } from '../utils/socket'; // ✅ 소켓 유틸 불러오기
+import { connectStomp,sendEnterMessage } from '../utils/socket'; // ✅ 소켓 유틸 불러오기
 
 interface GroupChatItemProps {
   chatRoomId: number;
@@ -21,11 +21,12 @@ const GroupChatItem: React.FC<GroupChatItemProps> = ({
   const navigate = useNavigate();
 
   const handleClick = () => {
-    connectStomp().then((stomp) => {
-      stomp.send(`/app/chat/room/${chatRoomId}/enter`, {}, JSON.stringify({ chatRoomId }));
-      navigate(`/chat/room/${chatRoomId}`);
+    connectStomp().then(() => {
+      sendEnterMessage(chatRoomId); // ✅ 입장 요청 전송
+      navigate(`/chat/room/${chatRoomId}`); // ✅ 채팅방으로 이동
     });
   };
+  
   
 
   return (
