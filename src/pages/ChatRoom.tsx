@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styles from './css/ChatRoom.module.css';
 import ChatMessage from '../components/ChatMessage';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {
   connectStomp,
   sendChatMessage,
@@ -13,6 +14,7 @@ import {
 } from '../utils/socket';
 import { StompSubscription } from '@stomp/stompjs';
 import axiosInstance from '../api/axiosInstance';
+
 interface ChatMessageData {
   id: number;
   sender: 'me' | 'other';
@@ -27,42 +29,69 @@ const ChatRoom: React.FC = () => {
   const chatBodyRef = useRef<HTMLDivElement | null>(null);
   const { roomId } = useParams();
   const navigate = useNavigate();
-  const roomTitle = '오버클락도 락'; // TODO: 서버에서 받아오도록 변경
-  const participantCount = 23;
+  
   const subscribedRef = useRef(false);
+  const location = useLocation();
+  const [myVerifyId, setMyVerifyId] = useState<string | null>(null);
+
+  const { roomTitle, participantCount } = location.state || {};
+  const [isOwner, setIsOwner] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // 햄버거 메뉴 열림 상태
   // ✅ 경로에 따라 수정 필요
+  
+  useEffect(() => {
+    const fetchMemberInfo = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/auth/user/chatrooms/${roomId}/memberInfo`);
+        const memberInfo = response.data.data?.[0];
+        setIsOwner(memberInfo.role === 'OWNER');
+        setMyVerifyId(memberInfo.verifyId); // ✅ 여기서 저장
+      } catch (error) {
+        console.error('방장 여부 확인 실패:', error);
+      }
+    };
+    
+  
+    if (roomId) {
+      fetchMemberInfo();
+    }
+  }, [roomId]);
 
 useEffect(() => {
-  if (!roomId) return;
+  if (!roomId || !myVerifyId) return; // ✅ 둘 다 있어야 연결
 
   const fetchMessages = async () => {
     try {
-      console.log(roomId);
       const response = await axiosInstance.get(
         `/api/auth/user/chat/rooms/${roomId}/messages`
       );
       
       const sortedMessages = response.data.data.content
         .sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-        .map((msg: any) => ({
-          id: msg.messageId,
-          sender: msg.senderId === 7 ? 'me' : 'other',
-          message: msg.content,
-          time: new Date(msg.createdAt).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-          }),
-        }));
-        console.log(sortedMessages);
+        
+        .map((msg: any) => {
+          
+          return {
+            id: msg.messageId,
+            sender: msg.senderVerifyId === myVerifyId ? 'me' : 'other',
+            message: msg.content,
+            time: new Date(msg.createdAt).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
+          };
+        });
+        
 
       setMessages(sortedMessages);
+      
     } catch (error) {
       console.error('💥 메시지 불러오기 실패:', error);
     }
   };
 
   fetchMessages();
-}, [roomId]);
+}, [roomId,myVerifyId]);
 
 
   useEffect(() => {
@@ -82,14 +111,16 @@ useEffect(() => {
   
         // 구독
         subscription = subscribeToRoom(Number(roomId), (message) => {
-            console.log('📩 수신 메시지 원본:', message.body);
+            
             const body = JSON.parse(message.body);
-            console.log("body",body);
+            console.log('🧾 body.senderVerifyId:', body.senderVerifyId);
+            console.log('🙋‍♀️ myVerifyId:', myVerifyId);
             setMessages((prev) => [
               ...prev,
               {
                 id: body.messageId, // ✅ 서버에서 제공하는 고유 ID 사용
-                sender: body.senderId === 7 ? 'me' : 'other',
+                sender: body.senderVerifyId == myVerifyId ? 'me' : 'other',
+
                 message: body.content,
                 time: new Date(body.createdAt).toLocaleTimeString([], {
                   hour: '2-digit',
@@ -120,7 +151,6 @@ useEffect(() => {
   }, [messages]);
 
   const handleSend = () => {
-    console.log('💬 메시지 전송 시도:', inputValue,roomId);
     if (!inputValue.trim() || !roomId) return;
     sendChatMessage(Number(roomId), inputValue, 'TEXT');
     setInputValue('');
@@ -140,7 +170,35 @@ useEffect(() => {
           }}
         />
         <div className={styles['header-title']}>
-          <div className={styles['room-name']}>{roomTitle}</div>
+        <div className={styles['room-name']}>
+          {roomTitle}
+          {isOwner && (
+            <img
+              src="/assets/edit.svg"
+              alt="이름 수정"
+              className={styles['edit-icon']}
+              onClick={async () => {
+                const newName = prompt('새 채팅방 이름을 입력하세요', roomTitle);
+                if (!newName || newName === roomTitle) return;
+
+                try {
+                  await axiosInstance.patch('/api/auth/user/chatrooms/name', {
+                    chatRoomId: Number(roomId),
+                    name: newName,
+                  });
+                  alert('채팅방 이름이 수정되었습니다.');
+                  // 화면에 즉시 반영
+                  location.state.roomTitle = newName; // 기존 state 수정
+                  navigate('.', { replace: true, state: { ...location.state, roomTitle: newName } });
+                } catch (err) {
+                  console.error('이름 수정 실패:', err);
+                  alert('이름 수정에 실패했습니다.');
+                }
+              }}
+            />
+          )}
+        </div>
+
           <div className={styles['participant-info']}>
             <img
               src="/assets/person.svg"
@@ -156,6 +214,7 @@ useEffect(() => {
           src="/assets/hambuger.svg"
           alt="메뉴"
           className={styles['header-icon']}
+          onClick={() => setMenuOpen(prev => !prev)}
         />
       </div>
 
@@ -209,7 +268,41 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      {menuOpen && (
+  <div className={styles['menu-popup']}>
+    {isOwner ? (
+          <button
+            onClick={async () => {
+              try {
+                await axiosInstance.delete(`/api/auth/user/chatrooms/${roomId}`);
+                alert('채팅방이 삭제되었습니다.');
+                navigate('/chat');
+              } catch (err) {
+                console.error('채팅방 삭제 실패:', err);
+              }
+            }}
+          >
+            채팅방 삭제
+          </button>
+        ) : (
+          <button
+            onClick={async () => {
+              try {
+                await axiosInstance.delete(`/api/auth/user/chatrooms/${roomId}/exit`);
+                alert('채팅방에서 나갔습니다.');
+                navigate('/chat');
+              } catch (err) {
+                console.error('채팅방 나가기 실패:', err);
+              }
+            }}
+          >
+            채팅방 나가기
+          </button>
+        )}
+      </div>
+    )}
     </div>
+    
   );
 };
 

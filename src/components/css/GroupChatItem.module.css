@@ -34,12 +34,13 @@
     font-size: 12px;
     font-weight: 500;
     color: #999;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1; /* 왼쪽 여유 있게 차지 */
-    min-width: 0;
+    white-space: nowrap;         /* ✅ 줄바꿈 없이 한 줄로 */
+    overflow: hidden;            /* ✅ 넘치는 내용 숨김 */
+    text-overflow: ellipsis;     /* ✅ 넘칠 때 ... 처리 */
+    flex: 1;
+    min-width: 0;                /* ✅ flex 컨테이너 안에서 필수 */
   }
+  
   
   .meta {
     display: flex;

@@ -16,6 +16,12 @@ interface UserState {
   setGender: (gender: string) => void;
   setEmail: (email: string) => void;
   setNickname: (nickname: string) => void;
+  setUserInfo: (info: {
+    nickname: string;
+    email: string;
+    gender: string;
+    birth: Birth;
+  }) => void;
 }
 
 const useUserStore = create<UserState>()(
@@ -40,6 +46,8 @@ const useUserStore = create<UserState>()(
       set((state) => {
         state.nickname = nickname;
       }),
+    setUserInfo: ({ nickname, email, gender, birth }) =>
+        set({ nickname, email, gender, birth }),
   }))
 );
 

@@ -11,6 +11,8 @@ import FestivalDetail from '../pages/FestivalDetail'
 import ReviewPage from '../components/ReviewPage'
 import ReviewWritePage from '../pages/ReviewWritePage'
 import FestivalAllPage from '../pages/FestivalAllPage'
+import MyPage from '../pages/MyPage'
+import EditProfilePage from '../pages/EditProfilePage'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -60,5 +62,13 @@ export const router = createBrowserRouter([
   {
     path: '/fest/all',
     element: <FestivalAllPage  />,
+  },
+  {
+    path: '/mypage',
+    element: <MyPage  />,
+  },
+  {
+    path: '/profile',
+    element: <EditProfilePage  />,
   },
 ])

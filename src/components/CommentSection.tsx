@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './css/CommentSection.module.css';
 import axiosInstance from '../api/axiosInstance';
-
+import { useNavigate } from 'react-router-dom';
 import CommentModal from './CommentModal'; // 모달 import
 
 interface Comment {
@@ -19,7 +19,7 @@ interface CommentSectionProps {
 
 export default function CommentSection({ eventId }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
-  
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [replyModalOpen, setReplyModalOpen] = useState(false);
   const [targetCommentId, setTargetCommentId] = useState<number | null>(null);
@@ -52,6 +52,30 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
 
     if (eventId) fetchComments();
   }, [eventId]);
+
+  const handleStartChat = async (memberId: number) => {
+    const confirmStart = window.confirm("이 사용자와 채팅하시겠습니까?");
+    if (!confirmStart) return;
+  
+    try {
+      const response = await axiosInstance.post('/api/auth/user/chatrooms', {
+        name: `사용자${memberId}`,
+        type: 'DIRECT',
+        path: `event ${eventId}`
+      });
+  
+      const chatRoomId = response.data.data.chatRoomId;
+      navigate(`/chat/room/${chatRoomId}`, {
+        state: {
+          roomTitle: `사용자${memberId}`,
+          participantCount: 2, // 보통 1:1 채팅이므로
+        }
+      });
+    } catch (err) {
+      console.error('채팅방 생성 실패:', err);
+      alert('채팅방을 만들 수 없습니다.');
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -86,6 +110,17 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
               <div className={styles.metaRight}>
                 <span className={styles.time}>· {formatDate(comment.createdAt)}</span>
                 <span className={styles.writer}>· 사용자{comment.memberId}</span>
+                
+                <button
+                  className={styles.chatButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleStartChat(comment.memberId);
+                  }}
+                >
+                  채팅하기
+                </button>
+
                 <button
                   className={styles.toggleRepliesBtn}
                   onClick={(e) => {

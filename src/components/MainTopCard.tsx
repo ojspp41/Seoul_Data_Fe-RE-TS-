@@ -1,21 +1,23 @@
-// components/MainTopCard.tsx
-import Slider from 'react-slick';
-import  { useEffect, useState } from 'react';
-import styles from './css/MainTopCard.module.css';
-import '../index.css'
-// index.tsx 또는 App.tsx에 추가
+
+import '../index.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+// MainTopCard.tsx
+import React from 'react';
+import Slider from 'react-slick';
+import { useQueries, UseQueryResult } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
+import styles from './css/MainTopCard.module.css';
 
 interface CardItem {
-  mainText: string;     // = title
-  subText: string;      // = category
-  imageUrl: string;     // = background image
+  eventId: number;
+  mainText: string;
+  subText: string;
+  imageUrl: string;
 }
 
-
-
+// 슬라이더 설정은 그대로 재사용
 const sliderSettings = {
   dots: true,
   infinite: true,
@@ -23,47 +25,84 @@ const sliderSettings = {
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: false,
-};
+  autoplay: true,
+  autoplaySpeed: 3000,
+  pauseOnHover: true,
+  lazyLoad: 'ondemand',
+} as const;
 
-const MainTopCard = () => {
-  const [topCardData, setTopCardData] = useState<CardItem[]>([]);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get('/api/auth/user/event/recommend');
-        const data = response.data;
-        const mappedData: CardItem[] = data.map((item: any) => ({
-          mainText: item.title,
-          subText: item.category,
-          imageUrl: item.imageUrl, // 백엔드에서 제공한다고 가정
-        }));
+const MainTopCard: React.FC = () => {
+  const navigate = useNavigate();
 
-        setTopCardData(mappedData);
-      } catch (error) {
-        console.error('추천 카드 데이터를 불러오는 데 실패했습니다.', error);
-      }
-    };
+  // 병렬로 2개의 쿼리를 실행
+  const [recommendQuery, popularQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ['recommendEvents'],
+        queryFn: async (): Promise<CardItem[]> => {
+          const res = await axiosInstance.get('/api/auth/user/event/recommend');
+          const arr = Array.isArray(res.data.data) ? res.data.data : [];
+          return arr.map((item: any) => ({
+            eventId: item.eventId,
+            mainText: item.title,
+            subText: item.category,
+            imageUrl: item.imageUrl,
+          }));
+        },
+        // 이 컴포넌트에서는 전역 staleTime을 그대로 사용해도 되지만, 필요시 override 가능
+      },
+      {
+        queryKey: ['popularEvents', 4],
+        queryFn: async (): Promise<CardItem[]> => {
+          const res = await axiosInstance.get('/api/auth/user/event', {
+            params: { sortByPopularity: 'True', size: 4 },
+          });
+          const content = Array.isArray(res.data.data?.content)
+            ? res.data.data.content
+            : Array.isArray(res.data.data)
+            ? res.data.data
+            : [];
+          return content.map((item: any) => ({
+            eventId: item.eventId,
+            mainText: item.title,
+            subText: `${item.category} | ${item.guName}`,
+            imageUrl: item.mainImg || '/assets/default-card.jpg',
+          }));
+        },
+      },
+    ],
+  }) as [UseQueryResult<CardItem[]>, UseQueryResult<CardItem[]>];
 
-    fetchData();
-  }, []);
+  // 로딩 및 에러 처리
+  if (recommendQuery.isLoading || popularQuery.isLoading) {
+    return <div>로딩 중…</div>;
+  }
+  if (recommendQuery.error || popularQuery.error) {
+    return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
+  }
+
+  const topCardData = recommendQuery.data || [];
+  const popularCardData = popularQuery.data || [];
 
   return (
-    <div className={styles.cardWrapper}>
-      {topCardData.length > 0 ? (
+    <div className={styles.container}>
+      {topCardData.length + popularCardData.length > 0 ? (
         <Slider {...sliderSettings} className={styles.slider}>
-          {topCardData.map((item, index) => (
-            <div key={index}>
+          {[...topCardData, ...popularCardData].map((item, idx) => (
+            <div key={idx}>
               <div
-                className={styles.card}
+                className={styles.cardWrapper}
                 style={{
                   backgroundImage: `url(${item.imageUrl})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
+                onClick={() => navigate(`/fest/detail?eventId=${item.eventId}`)}
               >
-                <p className={styles.mainText}>{item.mainText}</p>
-                <p className={styles.subText}>{item.subText}</p>
+                <div className={styles.cardOverlay}>
+                  <p className={styles.mainText}>{item.mainText}</p>
+                  <p className={styles.subText}>{item.subText}</p>
+                </div>
               </div>
             </div>
           ))}
@@ -73,15 +112,6 @@ const MainTopCard = () => {
           활동이 없어 <strong>추천할 수 없습니다.</strong>
         </div>
       )}
-
-
-        {/* dots는 react-slick이 자동 삽입하므로 CSS만 따로 컨트롤 */}
-
-        <div className={styles.buttonGroup}>
-            <button>실시간 인기</button>
-            <button>AI 추천</button>
-            <button>요즘뜨는</button>
-        </div>
     </div>
   );
 };

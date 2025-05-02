@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from "./css/ChatItem.module.css";
-
+import { getRelativeTime } from '../utils/time';
 interface ChatItemProps {
     name: string;
     participation: number;
@@ -9,6 +9,7 @@ interface ChatItemProps {
     time: string;
     hasNotification: boolean;
   }
+  
   
   const ChatItem: React.FC<ChatItemProps> = ({ name, participation, message, time, hasNotification }) => {
     return (
@@ -19,8 +20,10 @@ interface ChatItemProps {
             <div className={styles["chat-age-gender"]}>{participation}</div>
           </div>
           <div className={styles["chat-bottom"]}>
-            {message} · {time}
+            <span className={styles["chat-message"]}>{message}</span>
+            <span className={styles["chat-time"]}>{getRelativeTime(time)}</span>
           </div>
+
         </div>
         {hasNotification && <div className={styles["chat-notification"]}></div>}
       </div>

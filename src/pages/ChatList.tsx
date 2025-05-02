@@ -55,8 +55,7 @@ const Chat: React.FC = () => {
     const fetchChatList = async () => {
       try {
         const response = await axiosInstance.get('/api/auth/user/my-chatrooms');
-        setApiChatList(response.data.data); 
-        console.log(response.data.data);
+        setApiChatList(response.data.data.content); 
         // ❗ 서버 응답 구조에 따라 .data.data 조정 필요 (ex. 바로 배열이면 .data)
       } catch (error) {
         console.error('채팅방 리스트 가져오기 실패:', error);
@@ -71,7 +70,6 @@ const Chat: React.FC = () => {
       try {
         const response = await axiosInstance.get('/api/auth/user/chatrooms');
         const content = response.data.data?.content;
-        console.log("content",content);
         if (Array.isArray(content)) {
           setGroupChatList(content);
         } else {
@@ -90,7 +88,7 @@ const Chat: React.FC = () => {
   ? apiChatList.map(chat => {
       let mode: 'my' | 'unread' | 'group';
 
-      if (chat.type === 'GROUP') {
+      if (chat.type === "GROUP") {
         mode = 'group';
       } else if (chat.notReadMessageCount > 0) {
         mode = 'unread';
@@ -110,6 +108,11 @@ const Chat: React.FC = () => {
     })
   : [];
 
+  const myGroupRoomIds = apiChatList
+  .filter((chat) => chat.type === 'GROUP')
+  .map((chat) => chat.chatRoomId);
+  
+
   
   const filteredChats = chatData.filter(chat => chat.mode === selectedMode);
   const navigate = useNavigate();
@@ -117,9 +120,11 @@ const Chat: React.FC = () => {
   const filteredGroupChats = groupChatList.filter(item => {
     const matchCategory = selectedCategory === '전체' || item.category === selectedCategory;
     const matchKeyword = item.name.toLowerCase().includes(searchKeyword.toLowerCase());
-    return matchCategory && matchKeyword;
+    const notJoined = !myGroupRoomIds.includes(item.chatRoomId);
+    return matchCategory && matchKeyword && notJoined;
   });
   
+
   return (
     <div className={styles["chat-container"]}>
       <div className={styles["chat-header"]}>
@@ -145,9 +150,15 @@ const Chat: React.FC = () => {
 
       <div className={styles["chat-list"]}>
         {filteredChats.map(chat => (
-          <Link key={chat.id} to={`/chat/room/${chat.id}`} style={{ textDecoration: 'none' }}>
+          <Link
+            key={chat.id}
+            to={`/chat/room/${chat.id}`}
+            state={{ roomTitle: chat.name, participantCount: chat.participation }}
+            style={{ textDecoration: 'none' }}
+          >
             <ChatItem {...chat} />
           </Link>
+        
         ))}
       </div>
       {/* ✅ 회색 박스 구분선 */}
