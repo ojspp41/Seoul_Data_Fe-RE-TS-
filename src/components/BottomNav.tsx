@@ -15,7 +15,7 @@ const navItems = [
     }, {
         label: '커뮤니티',
         icon: '/assets/community.svg',
-        path: '/community'
+        path: '/fest/all'
     }, {
         label: '마이페이지',
         icon: '/assets/mypage.svg',

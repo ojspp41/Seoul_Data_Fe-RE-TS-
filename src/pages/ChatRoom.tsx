@@ -4,6 +4,7 @@ import styles from './css/ChatRoom.module.css';
 import ChatMessage from '../components/ChatMessage';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+
 import {
   connectStomp,
   sendChatMessage,
@@ -12,7 +13,6 @@ import {
   sendEnterMessage,
   sendLeaveMessage,
 } from '../utils/socket';
-import { StompSubscription } from '@stomp/stompjs';
 import axiosInstance from '../api/axiosInstance';
 
 interface ChatMessageData {
@@ -46,6 +46,9 @@ const ChatRoom: React.FC = () => {
         const memberInfo = response.data.data?.[0];
         setIsOwner(memberInfo.role === 'OWNER');
         setMyVerifyId(memberInfo.verifyId); // ✅ 여기서 저장
+        fetchMessages(memberInfo.verifyId);
+        setupWebSocket(memberInfo.verifyId);
+
       } catch (error) {
         console.error('방장 여부 확인 실패:', error);
       }
@@ -57,92 +60,45 @@ const ChatRoom: React.FC = () => {
     }
   }, [roomId]);
 
-useEffect(() => {
-  if (!roomId || !myVerifyId) return; // ✅ 둘 다 있어야 연결
-
-  const fetchMessages = async () => {
-    try {
-      const response = await axiosInstance.get(
-        `/api/auth/user/chat/rooms/${roomId}/messages`
-      );
-      
-      const sortedMessages = response.data.data.content
-        .sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-        
-        .map((msg: any) => {
-          
-          return {
-            id: msg.messageId,
-            sender: msg.senderVerifyId === myVerifyId ? 'me' : 'other',
-            message: msg.content,
-            time: new Date(msg.createdAt).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            }),
-          };
-        });
-        
-
-      setMessages(sortedMessages);
-      
-    } catch (error) {
-      console.error('💥 메시지 불러오기 실패:', error);
-    }
+  const fetchMessages = async (verifyId: string) => {
+    const response = await axiosInstance.get(`/api/auth/user/chat/rooms/${roomId}/messages`);
+    const sortedMessages = response.data.data.content
+      .sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+      .map((msg: any) => ({
+        id: msg.messageId,
+        sender: msg.senderVerifyId === verifyId ? 'me' : 'other',
+        message: msg.content,
+        time: new Date(msg.createdAt).toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      }));
+    setMessages(sortedMessages);
   };
-
-  fetchMessages();
-}, [roomId,myVerifyId]);
-
-
-  useEffect(() => {
+  
+  const setupWebSocket = async (verifyId: string) => {
     if (!roomId) return;
+    await connectStomp();
+    if (subscribedRef.current) return;
+    subscribedRef.current = true;
   
-    let subscription: StompSubscription | null | undefined;
-    
-  
-    const connect = async () => {
-      try {
-        await connectStomp();
-        if (subscribedRef.current) return; // ✅ 이미 구독한 경우 무시
-        subscribedRef.current = true; // ✅ 최초 구독만 허용
-        
-        // 입장 메시지
-        sendEnterMessage(Number(roomId));
-  
-        // 구독
-        subscription = subscribeToRoom(Number(roomId), (message) => {
-            
-            const body = JSON.parse(message.body);
-            console.log('🧾 body.senderVerifyId:', body.senderVerifyId);
-            console.log('🙋‍♀️ myVerifyId:', myVerifyId);
-            setMessages((prev) => [
-              ...prev,
-              {
-                id: body.messageId, // ✅ 서버에서 제공하는 고유 ID 사용
-                sender: body.senderVerifyId == myVerifyId ? 'me' : 'other',
-
-                message: body.content,
-                time: new Date(body.createdAt).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                }),
-              },
-            ]);
-          });
-        
-      } catch (err) {
-        console.error('💥 WebSocket 연결 실패:', err);
-      }
-    };
-  
-    connect();
-  
-    return () => {
-      if (roomId) sendLeaveMessage(Number(roomId));
-      subscription?.unsubscribe(); // 구독 해제
-      disconnectStomp();
-    };
-  }, [roomId]);
+    sendEnterMessage(Number(roomId));
+    subscribeToRoom(Number(roomId), (message) => {
+      const body = JSON.parse(message.body);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: body.messageId,
+          sender: body.senderVerifyId === verifyId ? 'me' : 'other',
+          message: body.content,
+          time: new Date(body.createdAt).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+        },
+      ]);
+    });
+  };
 
   useEffect(() => {
     if (chatBodyRef.current) {

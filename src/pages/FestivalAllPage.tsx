@@ -5,7 +5,7 @@ import EventCard from '../components/EventCard';
 import axiosInstance from '../api/axiosInstance';
 import styles from './css/FestivalAllPage.module.css';
 import { DAYS_KR, getWeekDays } from '../utils/alldateUtils';
-
+import BottomNav from '../components/BottomNav';
 interface EventType {
     eventId: number;
     category: string;
@@ -151,6 +151,7 @@ export default function FestivalAllPage() {
           }}
         />
       )}
+      <BottomNav/>
     </div>
   );
 }

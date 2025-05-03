@@ -1,9 +1,9 @@
-import React from 'react';
+import React,{useState} from 'react';
 import styles from './css/GroupChatItem.module.css';
 import { useNavigate } from 'react-router-dom';
 import { connectStomp, sendEnterMessage } from '../utils/socket';
 import axiosInstance from '../api/axiosInstance';
-
+import GroupChatJoinModal from './GroupChatJoinModal';
 interface GroupChatItemProps {
   chatRoomId: number;
   name: string;
@@ -20,35 +20,25 @@ const GroupChatItem: React.FC<GroupChatItemProps> = ({
   category,
 }) => {
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const handleClick = async () => {
-    const confirmed = window.confirm(`"${name}" 채팅방에 참가하시겠습니까?`);
-    if (!confirmed) return;
-
+  const handleClick = () => setModalOpen(true);
+  const handleJoin = async () => {
     try {
-      // ✅ 참가 요청 먼저
-      const response = await axiosInstance.post(
-        `/api/auth/user/chatrooms/${chatRoomId}/join`
-      );
-      console.log('✅ 참가 성공:', response.data);
+      await axiosInstance.post(`/api/auth/user/chatrooms/${chatRoomId}/join`);
 
-      // ✅ 참가 성공 후 소켓 연결 및 입장
       await connectStomp();
       sendEnterMessage(chatRoomId);
-
-      // ✅ 채팅방으로 이동
       navigate(`/chat/room/${chatRoomId}`, {
         state: {
           roomTitle: name,
           participantCount: participation,
         },
       });
-    } catch (error) {
-      console.error('❌ 참가 실패:', error);
-      alert('채팅방 참가에 실패했습니다. 이미 참가 중이거나 오류가 발생했습니다.');
+    } catch (err) {
+      alert('채팅방 참가에 실패했습니다.');
     }
   };
-
   return (
     <div onClick={handleClick} className={styles.container}>
       <div className={styles.header}>
@@ -65,6 +55,16 @@ const GroupChatItem: React.FC<GroupChatItemProps> = ({
           </div>
         </div>
       </div>
+      {modalOpen && (
+        <GroupChatJoinModal
+          name={name}
+          information={information}
+          participation={participation}
+          category={category}
+          onClose={() => setModalOpen(false)}
+          onJoin={handleJoin}
+        />
+      )}
     </div>
   );
 };

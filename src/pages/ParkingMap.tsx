@@ -128,7 +128,3 @@ export default function ParkingMap() {
   );
 }
 
-function parseTime(time: string): { start: string; end: string } {
-  const [start, end] = time.split('~').map((s) => s.trim());
-  return { start, end };
-}
