@@ -85,7 +85,7 @@
   }
   
   .categoryBtn.selected {
-    background-color: #000;
+    background-color: #3977F4;
     color: #fff;
     
     font-weight: 600;
@@ -125,7 +125,7 @@
   }
   
   .submitBtn.active {
-    background-color: #535353;
+    background-color: #3977F4;
     cursor: pointer;
   }
   

@@ -11,9 +11,22 @@ const formatDate = (date: Date) => {
   const dd = String(date.getDate()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}`;
 };
+interface Festival {
+  eventId: number;
+  comments: number;
+  title: string;
+  category: string;
+  startDate: string;
+  endDate: string;
+  isFree: '무료' | '유료' | string; // 백엔드 확장 고려
+  guName: string;
+  likes: boolean;
+  mainImg?: string;
+}
 
 const MainpageLogin = () => {
-  const [festivals, setFestivals] = useState<any[]>([]);
+  const [festivals, setFestivals] = useState<Festival[]>([]);
+
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<HTMLDivElement | null>(null);

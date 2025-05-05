@@ -212,7 +212,7 @@ const DateSelector = styled.div`
 `;
 
 const DateButton = styled.button<{ selected: boolean }>`
-  background-color: ${(props) => (props.selected ? '#000' : 'transparent')};
+  background-color: ${(props) => (props.selected ? '#3977F4' : 'transparent')};
   color: ${(props) => (props.selected ? '#fff' : '#000')};
   border-radius: 50%;
   width: 36px;
