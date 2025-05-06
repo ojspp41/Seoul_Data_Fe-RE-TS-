@@ -14,6 +14,7 @@ export default function FestivalMap({lat, lng,guName} : FestivalMapProps) {
         lat,
         lng
     };
+    console.log("position",position);
     const navigate = useNavigate();
     const handleParkingClick = () => {
         navigate(`/map?gu=${encodeURIComponent(guName)}`);

@@ -9,6 +9,7 @@ interface Comment {
   content: string;
   createdAt: string;
   memberId: number;
+  verifyId: string;
   replies: Comment[];
 }
 
@@ -53,11 +54,12 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
     if (eventId) fetchComments();
   }, [eventId]);
 
-  const handleStartChat = async (memberId: number) => {
+  const handleStartChat = async (memberId: number, verifyId: string) => {
     const confirmStart = window.confirm("이 사용자와 채팅하시겠습니까?");
     if (!confirmStart) return;
   
     try {
+      // 1. 채팅방 생성
       const response = await axiosInstance.post('/api/auth/user/chatrooms', {
         name: `사용자${memberId}`,
         type: 'DIRECT',
@@ -65,17 +67,26 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
       });
   
       const chatRoomId = response.data.data.chatRoomId;
+  
+      // 2. 사용자 초대
+      await axiosInstance.post('/api/auth/user/chatrooms/invite', {
+        chatRoomId,
+        verifyId,
+      });
+  
+      // 3. 이동
       navigate(`/chat/room/${chatRoomId}`, {
         state: {
           roomTitle: `사용자${memberId}`,
-          participantCount: 2, // 보통 1:1 채팅이므로
-        }
+          participantCount: 2,
+        },
       });
     } catch (err) {
-      console.error('채팅방 생성 실패:', err);
-      alert('채팅방을 만들 수 없습니다.');
+      console.error('채팅방 생성 또는 초대 실패:', err);
+      alert('채팅방을 만들거나 사용자를 초대할 수 없습니다.');
     }
   };
+  
 
   return (
     <div className={styles.container}>
@@ -115,7 +126,7 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
                   className={styles.chatButton}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleStartChat(comment.memberId);
+                    handleStartChat(comment.memberId, comment.verifyId);
                   }}
                 >
                   채팅하기

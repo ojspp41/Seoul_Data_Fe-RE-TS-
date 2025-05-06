@@ -27,13 +27,10 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/register', element: <RegisterPage /> },
-      { path: '/chat', element: <Chat /> },
-      { path: '/chat/create-group', element: <CreateGroupChat /> },
+      
       
       { path: '/profile', element: <EditProfilePage /> },
-      { path: '/popular', element: <PopularPage /> },
-      { path: '/scrap', element: <ScrapEventsPage /> },
-      { path: '/term', element: <TermsPage /> },
+      
       {
         path: '/support',
         element: <CustomerSupportPage />,
@@ -42,6 +39,8 @@ export const router = createBrowserRouter([
     ],
     
   },
+  { path: '/chat', element: <Chat /> },
+    { path: '/chat/create-group', element: <CreateGroupChat /> },
   { path: '/mypage', element: <MyPage /> },
   { path: '/myreview', element: <MyReviewPage /> },
   { path: '/fest/detail', element: <FestivalDetail /> },
@@ -53,4 +52,7 @@ export const router = createBrowserRouter([
   { path: '/fest/detail/review/write', element: <ReviewWritePage /> },
   { path: '/map', element: <ParkingMap /> },
   { path: '/chat/room/:roomId', element: <ChatRoom /> },
+  { path: '/popular', element: <PopularPage /> },
+      { path: '/scrap', element: <ScrapEventsPage /> },
+      { path: '/term', element: <TermsPage /> },
 ])
