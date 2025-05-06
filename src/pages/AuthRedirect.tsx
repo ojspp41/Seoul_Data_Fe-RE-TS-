@@ -17,7 +17,7 @@ const AuthRedirect = () => {
     const exchangeCodeForToken = async () => {
       try {
         const response = await axios.post(
-          `http://13.125.224.67:8080/api/token/exchange?code=${code}`,
+          `https://13.125.224.67.nip.io/api/token/exchange?code=${code}`,
           
           {
             headers: {
