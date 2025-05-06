@@ -1,5 +1,4 @@
 // src/pages/PopularPage.tsx
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import styles from './css/PopularPage.module.css';
 import axiosInstance from '../api/axiosInstance';
