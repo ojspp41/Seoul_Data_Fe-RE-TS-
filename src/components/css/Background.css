@@ -17,8 +17,9 @@
   height: 300px;
   border-radius: 50%;
   
-  filter: blur(150px);
-  background: linear-gradient(180deg, #F2F3F5 43.9%, #90C2FF 100%);
+  filter: blur(80px);
+  
+  background: linear-gradient(180deg, #F2F3F5 3.9%, #90C2FF 100%);
   animation: float 6s ease-in-out infinite alternate;
 }
 

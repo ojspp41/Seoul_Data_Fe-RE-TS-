@@ -27,19 +27,12 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/register', element: <RegisterPage /> },
-      { path: '/map', element: <ParkingMap /> },
       { path: '/chat', element: <Chat /> },
-      { path: '/chat/room/:roomId', element: <ChatRoom /> },
       { path: '/chat/create-group', element: <CreateGroupChat /> },
-      { path: '/login-success', element: <AuthRedirect /> },
-      { path: '/fest/detail/review', element: <ReviewPage /> },
-      { path: '/fest/detail/review/write', element: <ReviewWritePage /> },
-      { path: '/fest/all', element: <FestivalAllPage /> },
-      { path: '/mypage', element: <MyPage /> },
+      
       { path: '/profile', element: <EditProfilePage /> },
       { path: '/popular', element: <PopularPage /> },
       { path: '/scrap', element: <ScrapEventsPage /> },
-      { path: '/myreview', element: <MyReviewPage /> },
       { path: '/term', element: <TermsPage /> },
       {
         path: '/support',
@@ -49,9 +42,15 @@ export const router = createBrowserRouter([
     ],
     
   },
-  
+  { path: '/mypage', element: <MyPage /> },
+  { path: '/myreview', element: <MyReviewPage /> },
   { path: '/fest/detail', element: <FestivalDetail /> },
   { path: '/mainpage', element: <MainpageLogin /> },
-  
+  { path: '/fest/all', element: <FestivalAllPage /> },
   { path: '/ai', element: <AIRecommendPage /> },
+  { path: '/login-success', element: <AuthRedirect /> },
+  { path: '/fest/detail/review', element: <ReviewPage /> },
+  { path: '/fest/detail/review/write', element: <ReviewWritePage /> },
+  { path: '/map', element: <ParkingMap /> },
+  { path: '/chat/room/:roomId', element: <ChatRoom /> },
 ])
