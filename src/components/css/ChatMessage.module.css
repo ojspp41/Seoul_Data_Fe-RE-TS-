@@ -41,7 +41,7 @@
   }
   
   .chatroom-other-message .chatroom-message-bubble {
-    background: linear-gradient(90deg, #FF775E 10%, #FF4D61 60%, #E83ABC 100%);
+    background-color: #3977F4;
     color: white;
   }
   

@@ -35,6 +35,7 @@ const MyPage = () => {
       }, []);
       
     return (
+        
         <div className={styles.container}>
             <p className={styles.welcome}>
                 {nickname}님,
@@ -44,27 +45,31 @@ const MyPage = () => {
 
             <div className={styles.section}>
                 <p className={styles.sectionTitle}>활동</p>
-                <div className={styles.item}>
-                    <span>좋아한 행사</span>
+
+                <div className={styles.item} onClick={() => navigate('/ai')}>
+                    <span>AI 맞춤 추천</span>
                     <img src="/assets/detail/slash.svg" alt="arrow"/>
                 </div>
-                <div className={styles.item}>
+
+                <div className={styles.item} onClick={() => navigate('/scrap')}>
                     <span>스크랩한 행사</span>
                     <img src="/assets/detail/slash.svg" alt="arrow"/>
                 </div>
-                <div className={styles.item}>
+
+                <div className={styles.item} onClick={() => navigate('/myreview')}>
                     <span>내가 쓴 리뷰</span>
                     <img src="/assets/detail/slash.svg" alt="arrow"/>
                 </div>
             </div>
 
+
             <div className={styles.section}>
                 <p className={styles.sectionTitle}>기타</p>
-                <div className={styles.item}>
+                <div className={styles.item} onClick={() => navigate('/term')}>
                     <span>이용약관</span>
                     <img src="/assets/detail/slash.svg" alt="arrow"/>
                 </div>
-                <div className={styles.item}>
+                <div className={styles.item} onClick={() => navigate('/support')}>
                     <span>고객지원</span>
                     <img src="/assets/detail/slash.svg" alt="arrow"/>
                 </div>

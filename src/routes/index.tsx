@@ -15,71 +15,43 @@ import MyPage from '../pages/MyPage'
 import EditProfilePage from '../pages/EditProfilePage'
 import PopularPage from '../pages/PopularPage'
 import AIRecommendPage from '../pages/AIRecommendPage'
-
+import ScrapEventsPage from '../pages/ScrapEventsPage'
+import MyReviewPage from '../pages/MyReviewPage'
+import TermsPage from '../pages/TermsPage'
+import BackgroundLayout from '../Layout/BackgroundLayout'
+import CustomerSupportPage from '../pages/CustomerSupportPage'
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
-  },
-  {
-    path: '/register',
-    element: <RegisterPage />,
-  },
-  {
-    path: '/mainpage',
-    element: <MainpageLogin />,
-  },
-  {
-    path: '/map',
-    element: <ParkingMap />,
-  },
-  {
-    path: '/chat',
-    element: <Chat />,
-  },
-  {
-    path: '/chat/room/:roomId',
-    element: <ChatRoom />,
-  },
-  {
-    path: '/chat/create-group',
-    element: <CreateGroupChat />,
-  },
-  {
-    path: '/login-success',
-    element: <AuthRedirect />,
+    element: <BackgroundLayout />,
+    children: [
+      { path: '/', element: <HomePage /> },
+      { path: '/register', element: <RegisterPage /> },
+      { path: '/map', element: <ParkingMap /> },
+      { path: '/chat', element: <Chat /> },
+      { path: '/chat/room/:roomId', element: <ChatRoom /> },
+      { path: '/chat/create-group', element: <CreateGroupChat /> },
+      { path: '/login-success', element: <AuthRedirect /> },
+      { path: '/fest/detail/review', element: <ReviewPage /> },
+      { path: '/fest/detail/review/write', element: <ReviewWritePage /> },
+      { path: '/fest/all', element: <FestivalAllPage /> },
+      { path: '/mypage', element: <MyPage /> },
+      { path: '/profile', element: <EditProfilePage /> },
+      { path: '/popular', element: <PopularPage /> },
+      { path: '/scrap', element: <ScrapEventsPage /> },
+      { path: '/myreview', element: <MyReviewPage /> },
+      { path: '/term', element: <TermsPage /> },
+      {
+        path: '/support',
+        element: <CustomerSupportPage />,
+      }
+      
+    ],
+    
   },
   
-  {
-    path: '/fest/detail',
-    element: <FestivalDetail />,
-  },
-  {
-    path: '/fest/detail/review',
-    element: <ReviewPage />,
-  },
-  {
-    path: '/fest/detail/review/write',
-    element: <ReviewWritePage  />,
-  },
-  {
-    path: '/fest/all',
-    element: <FestivalAllPage  />,
-  },
-  {
-    path: '/mypage',
-    element: <MyPage  />,
-  },
-  {
-    path: '/profile',
-    element: <EditProfilePage  />,
-  },
-  {
-    path: '/popular',
-    element: <PopularPage  />,
-  },
-  {
-    path: '/ai/recommend',
-    element: <AIRecommendPage  />,
-  },
+  { path: '/fest/detail', element: <FestivalDetail /> },
+  { path: '/mainpage', element: <MainpageLogin /> },
+  
+  { path: '/ai', element: <AIRecommendPage /> },
 ])

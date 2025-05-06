@@ -1,5 +1,4 @@
 import styles from './css/Mainpage.module.css';
-import Background from '../components/Background';
 import { motion } from 'framer-motion';
 
 const MainPage = () => {
@@ -9,7 +8,6 @@ const MainPage = () => {
 
   return (
     <div className={styles.container}>
-      <Background />
       <div className={styles.circle}></div>
 
       {/* 타이틀 애니메이션 */}

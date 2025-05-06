@@ -24,7 +24,8 @@ const PopularPage = () => {
     const navigate = useNavigate(); // ✅ 추가
 
   const handleBack = () => {
-    navigate('/mainpage');
+    navigate('/mainpage', { replace: true });
+
   };
   const { data = [] } = useQuery<CardItem[]>({
     queryKey: ['popularEventsFull'],
@@ -50,7 +51,7 @@ const PopularPage = () => {
 
       <div className={styles.grid}>
         {data.map((item, idx) => (
-          <div className={styles.card} key={item.eventId}>
+          <div className={styles.card} key={item.eventId} onClick={() => navigate(`/fest/detail?eventId=${item.eventId}`)} >
             <div className={styles.imageWrapper}>
               <img src={item.mainImg || '/assets/default-card.jpg'} alt={item.title} />
               <span className={styles.rank}>{idx + 1}</span>

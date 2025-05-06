@@ -3,7 +3,7 @@
   margin-bottom: 0px;
 }
 .container{
-  margin-bottom: 60px;
+  margin-bottom: 20px;
 }
 /* slick-slide 내부 flex로 카드 정렬 */
 .slick-slide > div {
@@ -59,6 +59,7 @@
   font-weight: 400;
   margin-top: 4px;
   text-align: center;
+  margin-bottom: 50px;
 }
 
 /* dots 위치 제어 */
@@ -79,26 +80,6 @@
 }
 
 /* 버튼은 카드 아래 고정 */
-.buttonGroup {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 24px;
-}
 
-.buttonGroup button {
-  background-color: #333333;
-  color: #FFFFFF;
-  font-size: 16px;
-  font-weight: 600;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 12px;
-}
 
-.emptyMessage {
-  text-align: center;
-  padding: 60px 0;
-  color: #e9e4e4;
-  font-size: 18px;
-  border-radius: 12px;
-}
+

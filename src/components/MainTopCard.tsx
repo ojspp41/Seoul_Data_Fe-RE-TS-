@@ -50,6 +50,8 @@ const MainTopCard: React.FC = () => {
             imageUrl: item.mainImg || '/assets/default-card.jpg',
           }));
         },
+        staleTime: 0,
+        refetchOnMount: true, // ✅ 추가
         // 이 컴포넌트에서는 전역 staleTime을 그대로 사용해도 되지만, 필요시 override 가능
       },
       {
@@ -71,6 +73,8 @@ const MainTopCard: React.FC = () => {
             imageUrl: item.mainImg || '/assets/default-card.jpg',
           }));
         },
+        staleTime: 0,
+        refetchOnMount: true, // ✅ 추가
       },
     ],
   }) as [UseQueryResult<CardItem[]>, UseQueryResult<CardItem[]>];
@@ -88,33 +92,38 @@ const MainTopCard: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      {topCardData.length + popularCardData.length > 0 ? (
-        <Slider {...sliderSettings} className={styles.slider}>
-          {[...topCardData, ...popularCardData].map((item, idx) => (
-            <div key={idx}>
-              <div
-                className={styles.cardWrapper}
-                style={{
-                  backgroundImage: `url(${item.imageUrl})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-                onClick={() => navigate(`/fest/detail?eventId=${item.eventId}`)}
-              >
-                <div className={styles.cardOverlay}>
-                  <p className={styles.mainText}>{item.mainText}</p>
-                  <p className={styles.subText}>{item.subText}</p>
+        {topCardData.length + popularCardData.length > 0 ? (
+          <div style={{ position: 'relative' }}>
+            <Slider {...sliderSettings} className={styles.slider}>
+              {[...topCardData, ...popularCardData].map((item, idx) => (
+                <div key={idx}>
+                  <div
+                    className={styles.cardWrapper}
+                    style={{
+                      backgroundImage: `url(${item.imageUrl})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                    onClick={() => navigate(`/fest/detail?eventId=${item.eventId}`)}
+                  >
+                    <div className={styles.cardOverlay}>
+                      <p className={styles.mainText}>{item.mainText}</p>
+                      <p className={styles.subText}>{item.subText}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </Slider>
-      ) : (
-        <div className={styles.emptyMessage}>
-          활동이 없어 <strong>추천할 수 없습니다.</strong>
-        </div>
-      )}
-    </div>
+              ))}
+            </Slider>
+
+            
+          </div>
+        ) : (
+          <div className={styles.emptyMessage}>
+            활동이 없어 <strong>추천할 수 없습니다.</strong>
+          </div>
+        )}
+      </div>
+
   );
 };
 

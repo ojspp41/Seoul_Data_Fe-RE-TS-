@@ -62,7 +62,8 @@
 }
 
 .send-button.active {
-    background: linear-gradient(90deg, #ff775e 10%, #ff4d61 60%, #e83abc 100%);
+    background-color: #3977F4;
+    color: #ffffff;
 }
 
 .send-icon {
@@ -127,12 +128,13 @@
     position: absolute;
     top: 56px;
     right: 12px;
-    background-color: white;
+    background-color: #3977F4;
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px;
+    color: #ffffff;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 999;
+    z-index: 100000;
 }
 
 .menu-popup button {
@@ -143,7 +145,7 @@
     text-align: left;
     padding: 8px;
     font-size: 14px;
-    color: #333;
+    color: #ffffff;
     cursor: pointer;
 }
 

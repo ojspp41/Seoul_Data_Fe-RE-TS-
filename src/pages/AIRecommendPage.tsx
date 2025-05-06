@@ -16,11 +16,17 @@ interface CardItem {
   mainImg: string;
 }
 
-const formatDate = (start: string, end: string) => {
+const formatDate = (start?: string, end?: string) => {
+  if (!start || !end) return ''; // 둘 중 하나라도 없으면 빈 문자열 반환
+
   const s = start.split('-');
   const e = end.split('-');
+
+  if (s.length < 3 || e.length < 3) return ''; // 혹시 split 결과가 부족할 경우 방어
+
   return `25.${s[1]}.${s[2]} ~ 25.${e[1]}.${e[2]}`;
 };
+
 
 const AIRecommendPage = () => {
   const navigate = useNavigate();
@@ -33,6 +39,8 @@ const AIRecommendPage = () => {
           const res = await axiosInstance.get('/api/auth/user/event/recommend');
           return Array.isArray(res.data.data) ? res.data.data : [];
         },
+        staleTime: 0,              // 🔄 매번 새로 가져오도록
+        refetchOnMount: true,      // 🔄 마운트 시 재요청
       },
       {
         queryKey: ['popularEvents', 4],
@@ -45,9 +53,12 @@ const AIRecommendPage = () => {
             : [];
           return content;
         },
+        staleTime: 0,
+        refetchOnMount: true,
       },
     ],
   }) as [UseQueryResult<CardItem[]>, UseQueryResult<CardItem[]>];
+  
 
   if (recommendQuery.isLoading || popularQuery.isLoading) {
     return <div>로딩 중...</div>;
@@ -63,7 +74,7 @@ const AIRecommendPage = () => {
           src="/assets/slash.svg"
           alt="뒤로가기"
           className={styles.icon}
-          onClick={() => navigate('/mainpage')}
+          onClick={() => navigate('/mainpage', { replace: true })}
         />
         <h2 className={styles.title}>AI 추천</h2>
       </div>
@@ -79,7 +90,7 @@ const AIRecommendPage = () => {
             dateRange={formatDate(item.startDate, item.endDate)}
             mainImg={item.mainImg || '/assets/default-card.jpg'}
             eventId={item.eventId}
-            onClick={(id) => navigate(`/event/${id}`)}
+            onClick={(id) => navigate(`/fest/detail?eventId=${id}`)}
           />
         ))}
       </div>
