@@ -6,6 +6,7 @@ import BottomNav from '../components/BottomNav';
 import GroupChatItem from '../components/GroupChatItem';
 import { useNavigate } from "react-router-dom";
 import axiosInstance from '../api/axiosInstance';
+import { motion } from 'framer-motion'; // ✅ 추가
 interface ChatData {
   id: number;
   name: string;
@@ -127,7 +128,12 @@ const Chat: React.FC = () => {
   
 
   return (
-    <div className={styles["chat-container"]}>
+    <motion.div
+      className={styles["chat-container"]}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className={styles["chat-header"]}>
         <h2 className={styles["chat-tit"]}>채팅</h2>
         <img src="/assets/setting.svg" alt="설정" className={styles["chat-icon"]} />
@@ -135,8 +141,10 @@ const Chat: React.FC = () => {
 
       <div className={styles["chat-filter-buttons"]}>
         {['my', 'unread', 'group'].map(mode => (
-          <button
+          <motion.button
             key={mode}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className={`${styles["filter-button"]} ${selectedMode === mode ? styles["selected"] : ''}`}
             onClick={() => setSelectedMode(mode as 'my' | 'unread' | 'group')}
           >
@@ -145,7 +153,7 @@ const Chat: React.FC = () => {
               unread: '안 읽은 채팅방',
               group: '단체 채팅방',
             }[mode]}
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -159,18 +167,18 @@ const Chat: React.FC = () => {
           >
             <ChatItem {...chat} />
           </Link>
-        
         ))}
       </div>
-      {/* ✅ 회색 박스 구분선 */}
+
       {selectedMode === 'group' && (
-        <div className={styles["divider"]}></div>
-      )}
-      {selectedMode === 'group' && (
-        <div className={styles["group-chat-section"]}>
+        <motion.div
+          className={styles["group-chat-section"]}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
           <div className={styles["group-chat-header"]}>
             <h3 className={styles["group-chat-title"]}>전체 채팅방</h3>
-            {/* 검색 영역 */}
             <div className={styles["search-area"]}>
               <button
                 onClick={() => {
@@ -181,24 +189,23 @@ const Chat: React.FC = () => {
               >
                 {showSearch ? '취소' : <img src="/assets/search.svg" alt="검색" />}
               </button>
-              
-
-              
             </div>
-            
           </div>
+
           {showSearch && (
-                
-                <input
-                  type="text"
-                  placeholder="관심사 혹은 키워드를 입력하세요"
-                  className={styles["search-input"]}
-                  value={searchKeyword}
-                  onChange={(e) => setSearchKeyword(e.target.value)}
-                />
-              )}
+            <motion.input
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className={styles["search-input"]}
+              placeholder="관심사 혹은 키워드를 입력하세요"
+              type="text"
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+            />
+          )}
+
           <div className={styles["group-category-list"]}>
-            {['전체', ...categories].map((cat) => (
+            {['전체', ...categories].map(cat => (
               <button
                 key={cat}
                 className={`${styles["category-button"]} ${selectedCategory === cat ? styles["selected"] : ''}`}
@@ -208,39 +215,39 @@ const Chat: React.FC = () => {
               </button>
             ))}
           </div>
-          <div className={styles["group-chat-list"]} 
-            
-          >
-            {filteredGroupChats
-              .slice(0, visibleCount)
-              .map((chat, index) => (
-                <GroupChatItem key={index} {...chat} />
+
+          <div className={styles["group-chat-list"]}>
+            {filteredGroupChats.slice(0, visibleCount).map((chat, index) => (
+              <GroupChatItem key={index} {...chat} />
             ))}
 
-            {visibleCount < groupChatList.filter(item =>
-              selectedCategory === '전체' || item.category === selectedCategory
-            ).length && (
-              <button
+            {visibleCount < filteredGroupChats.length && (
+              <motion.button
                 className={styles["load-more-button"]}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setVisibleCount(prev => prev + 4)}
               >
                 더보기
-              </button>
-
+              </motion.button>
             )}
           </div>
-        </div>
+        </motion.div>
       )}
 
-
       {selectedMode === 'group' && (
-        <div className={styles["floating-plus-button"]} onClick={() => navigate("/chat/create-group")}>
+        <motion.div
+          className={styles["floating-plus-button"]}
+          onClick={() => navigate("/chat/create-group")}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
           <img src="/assets/plus.svg" alt="그룹채팅 추가" />
-        </div>
+        </motion.div>
       )}
 
       <BottomNav />
-    </div>
+    </motion.div>
   );
 };
 

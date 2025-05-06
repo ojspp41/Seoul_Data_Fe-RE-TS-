@@ -1,79 +1,103 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
 import ReviewItem from '../components/ReviewItem';
 import styles from './css/MyReviewPage.module.css';
+import {motion} from 'framer-motion';
 
 interface Review {
-  id: number;
-  eventId: number;
-  eventTitle: string;
-  memberName: string;
-  content: string;
-  createdAt: string;
-  rating: number;
-  mediaList?: { imageUrl: string }[];
+    id: number;
+    eventId: number;
+    eventTitle: string;
+    memberName: string;
+    content: string;
+    createdAt: string;
+    rating: number;
+    mediaList?: {
+        imageUrl: string
+    }[];
 }
 
 const MyReviewPage = () => {
-  const navigate = useNavigate();
-  const [reviews, setReviews] = useState<Review[]>([]);
+    const navigate = useNavigate();
+    const [reviews, setReviews] = useState<Review[]>([]);
 
-  useEffect(() => {
-    const fetchMyReviews = async () => {
-      try {
-        const res = await axiosInstance.get('/api/auth/user/my-reviews');
-        setReviews(res.data.data.content);
-      } catch (err) {
-        console.error('리뷰 가져오기 실패:', err);
-      }
-    };
+    useEffect(() => {
+        const fetchMyReviews = async () => {
+            try {
+                const res = await axiosInstance.get('/api/auth/user/my-reviews');
+                setReviews(res.data.data.content);
+            } catch (err) {
+                console.error('리뷰 가져오기 실패:', err);
+            }
+        };
 
-    fetchMyReviews();
-  }, []);
+        fetchMyReviews();
+    }, []);
 
-  return (
-    <div className={styles.wrapper}>
-      {/* 헤더 */}
-      <div className={styles.header}>
-        <img
-          src="/assets/slash.svg"
-          alt="뒤로가기"
-          className={styles.icon}
-          onClick={() => navigate("/mypage")}
-        />
-        <p className={styles.title}>내가 쓴 리뷰</p>
-      </div>
-
-      {/* 섹션 타이틀 */}
-      <p className={styles.sectionTitle}>작성한 리뷰 모음</p>
-
-      {/* 리뷰 목록 */}
-      <div className={styles.reviewList}>
-        {/* 리뷰 목록 */}
-{reviews.length > 0 ? (
-  <div className={styles.reviewList}>
-            {reviews.map((review) => (
-                <div
-                    key={review.id}
-                    onClick={() => navigate(`/fest/detail?eventId=${review.eventId}`)}
-                    style={{ cursor: 'pointer' }}
-                >
-                    <ReviewItem
-                    name={review.memberName}
-                    visitDate={new Date(review.createdAt).toLocaleDateString('ko-KR')}
-                    content={review.content}
-                    mediaList={review.mediaList}
-                    />
-                </div>
-                ))}
+    return (
+        <motion.div
+            className={styles.wrapper}
+            initial={{
+                opacity: 0,
+                y: 20
+            }}
+            animate={{
+                opacity: 1,
+                y: 0
+            }}
+            transition={{
+                duration: 0.4
+            }}>
+            {/* 헤더 */}
+            <div className={styles.header}>
+                <motion.img
+                    src="/assets/slash.svg"
+                    alt="뒤로가기"
+                    className={styles.icon}
+                    onClick={() => navigate("/mypage")}
+                    whileTap={{
+                        scale: 0.9
+                    }}/>
+                <p className={styles.title}>내가 쓴 리뷰</p>
             </div>
-            ) : (
-            <p className={styles.emptyMessage}>작성한 리뷰가 없습니다.</p>
-            )}
-      </div>
-    </div>
-  );
+
+            {/* 섹션 타이틀 */}
+            <p className={styles.sectionTitle}>작성한 리뷰 모음</p>
+
+            {/* 리뷰 목록 */}
+            {
+                reviews.length > 0
+                    ? (
+                        <div className={styles.reviewList}>
+                            {
+                                reviews.map((review) => (
+                                    <motion.div
+                                        key={review.id}
+                                        onClick={() => navigate(`/fest/detail?eventId=${review.eventId}`)}
+                                        whileHover={{
+                                            scale: 1.02
+                                        }}
+                                        whileTap={{
+                                            scale: 0.97
+                                        }}
+                                        style={{
+                                            cursor: 'pointer'
+                                        }}>
+                                        <ReviewItem
+                                            name={review.memberName}
+                                            visitDate={new Date(review.createdAt).toLocaleDateString('ko-KR')}
+                                            content={review.content}
+                                            mediaList={review.mediaList}/>
+                                    </motion.div>
+                                ))
+                            }
+                        </div>
+                    )
+                    : (<p className={styles.emptyMessage}>작성한 리뷰가 없습니다.</p>)
+            }
+        </motion.div>
+    );
 };
 
 export default MyReviewPage;

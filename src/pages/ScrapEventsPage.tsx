@@ -4,6 +4,7 @@ import axiosInstance from '../api/axiosInstance';
 import EventCard from '../components/EventCard';
 import styles from './css/ScrapEventsPage.module.css';
 
+import { motion } from 'framer-motion'; // ✅ 추가
 interface ScrapEvent {
   eventId: number;
   title: string;
@@ -40,12 +41,18 @@ const ScrapEventsPage: React.FC = () => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <motion.div
+      className={styles.container}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       <div className={styles.header}>
-        <img
+        <motion.img
           src="/assets/slash.svg"
           alt="뒤로가기"
           className={styles.icon}
+          whileTap={{ scale: 0.9 }}
           onClick={() => navigate('/mypage')}
         />
         <h2 className={styles.title}>스크랩한 행사</h2>
@@ -55,20 +62,27 @@ const ScrapEventsPage: React.FC = () => {
 
       <div className={styles.list}>
         {events.map((item) => (
-          <div key={item.eventId} style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '12px' }}>
+          <motion.div
+            key={item.eventId}
+            style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '12px' }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
             <EventCard
-                category={item.category}
-                title={item.title}
-                location={item.guName}
-                dateRange={formatDate(item.startDate, item.endDate)}
-                mainImg={item.mainImg || '/assets/default-card.jpg'}
-                eventId={item.eventId}
-                onClick={(id) => navigate(`/event/${id}`)}
+              category={item.category}
+              title={item.title}
+              location={item.guName}
+              dateRange={formatDate(item.startDate, item.endDate)}
+              mainImg={item.mainImg || '/assets/default-card.jpg'}
+              eventId={item.eventId}
+              onClick={(id) => navigate(`/fest/detail?eventId=${id}`)}
+
             />
-            </div>
+          </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

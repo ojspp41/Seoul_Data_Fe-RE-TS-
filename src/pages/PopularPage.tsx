@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import styles from './css/PopularPage.module.css';
 import axiosInstance from '../api/axiosInstance';
 import { useNavigate } from 'react-router-dom'; 
+import { motion } from 'framer-motion'; 
 
 interface CardItem {
   eventId: number;
@@ -42,15 +43,33 @@ const PopularPage = () => {
   });
 
   return (
-    <div className={styles.wrapper}>
+    <motion.div
+      className={styles.wrapper}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       <div className={styles.header}>
-        <img src="/assets/slash.svg" alt="slash"  onClick={handleBack} className={styles.icon} />
+        <motion.img
+          src="/assets/slash.svg"
+          alt="뒤로가기"
+          onClick={handleBack}
+          className={styles.icon}
+          whileTap={{ scale: 0.9 }}
+        />
         <h2 className={styles.title}>실시간 인기</h2>
       </div>
 
       <div className={styles.grid}>
         {data.map((item, idx) => (
-          <div className={styles.card} key={item.eventId} onClick={() => navigate(`/fest/detail?eventId=${item.eventId}`)} >
+          <motion.div
+            className={styles.card}
+            key={item.eventId}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+            onClick={() => navigate(`/fest/detail?eventId=${item.eventId}`)}
+          >
             <div className={styles.imageWrapper}>
               <img src={item.mainImg || '/assets/default-card.jpg'} alt={item.title} />
               <span className={styles.rank}>{idx + 1}</span>
@@ -61,10 +80,10 @@ const PopularPage = () => {
                 📅 {formatDate(item.startDate)} ~ {formatDate(item.endDate)}
               </p>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
