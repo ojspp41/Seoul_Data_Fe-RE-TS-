@@ -23,7 +23,7 @@ interface Festival {
   endDate: string;
   isFree: '무료' | '유료' | string;
   guName: string;
-  likes: boolean;
+  currentUserLike: boolean;
   mainImg?: string;
 }
 
@@ -90,7 +90,7 @@ const MainpageLogin = () => {
             dateRange={`${festival.startDate} ~ ${festival.endDate}`}
             price={festival.isFree === '무료' ? '무료' : '유료'}
             location={festival.guName}
-            likedDefault={festival.likes}
+            likedDefault={festival.currentUserLike}
             mainImg={festival.mainImg}
           />
         </FestivalCardWrapper>
