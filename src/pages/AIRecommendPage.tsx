@@ -1,5 +1,5 @@
 // src/pages/AIRecommendPage.tsx
-import React from 'react';
+
 import { useQueries, UseQueryResult } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import EventCard from '../components/EventCard';

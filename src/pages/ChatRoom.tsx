@@ -32,7 +32,6 @@ const ChatRoom: React.FC = () => {
   
   const subscribedRef = useRef(false);
   const location = useLocation();
-  const [myVerifyId, setMyVerifyId] = useState<string | null>(null);
 
   const { roomTitle, participantCount } = location.state || {};
   const [isOwner, setIsOwner] = useState(false);
@@ -45,7 +44,6 @@ const ChatRoom: React.FC = () => {
         const response = await axiosInstance.get(`/api/auth/user/chatrooms/${roomId}/memberInfo`);
         const memberInfo = response.data.data?.[0];
         setIsOwner(memberInfo.role === 'OWNER');
-        setMyVerifyId(memberInfo.verifyId); // ✅ 여기서 저장
         fetchMessages(memberInfo.verifyId);
         setupWebSocket(memberInfo.verifyId);
 
