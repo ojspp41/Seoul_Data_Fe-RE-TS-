@@ -91,7 +91,7 @@ const RegisterPage: React.FC = () => {
       {isBirthFilled && isGenderFilled && (
         <div className={styles.emailSection}>
           <EmailInput />
-          <button className={styles.emailCheckButton} onClick={handleEmailCheck}>중복확인</button>
+          <button className={`${styles.emailCheckButton} ${emailChecked ? styles.valid : ''}`} onClick={handleEmailCheck}>중복확인</button>
         </div>
       )}
       {emailCheckMessage && <p className={styles.emailCheckMessage}>{emailCheckMessage}</p>}

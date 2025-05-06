@@ -13,6 +13,9 @@ import ReviewWritePage from '../pages/ReviewWritePage'
 import FestivalAllPage from '../pages/FestivalAllPage'
 import MyPage from '../pages/MyPage'
 import EditProfilePage from '../pages/EditProfilePage'
+import PopularPage from '../pages/PopularPage'
+import AIRecommendPage from '../pages/AIRecommendPage'
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -70,5 +73,13 @@ export const router = createBrowserRouter([
   {
     path: '/profile',
     element: <EditProfilePage  />,
+  },
+  {
+    path: '/popular',
+    element: <PopularPage  />,
+  },
+  {
+    path: '/ai/recommend',
+    element: <AIRecommendPage  />,
   },
 ])

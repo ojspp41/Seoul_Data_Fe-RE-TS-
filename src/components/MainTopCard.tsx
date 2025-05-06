@@ -42,11 +42,12 @@ const MainTopCard: React.FC = () => {
         queryFn: async (): Promise<CardItem[]> => {
           const res = await axiosInstance.get('/api/auth/user/event/recommend');
           const arr = Array.isArray(res.data.data) ? res.data.data : [];
+          console.log("arr",arr);
           return arr.map((item: any) => ({
             eventId: item.eventId,
             mainText: item.title,
-            subText: item.category,
-            imageUrl: item.imageUrl,
+            subText: `${item.category} | ${item.guName}`,
+            imageUrl: item.mainImg || '/assets/default-card.jpg',
           }));
         },
         // 이 컴포넌트에서는 전역 staleTime을 그대로 사용해도 되지만, 필요시 override 가능
@@ -62,6 +63,7 @@ const MainTopCard: React.FC = () => {
             : Array.isArray(res.data.data)
             ? res.data.data
             : [];
+            console.log("content",content);
           return content.map((item: any) => ({
             eventId: item.eventId,
             mainText: item.title,
