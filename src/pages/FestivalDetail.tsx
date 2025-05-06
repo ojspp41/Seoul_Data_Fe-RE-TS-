@@ -49,10 +49,12 @@ export default function FestivalDetail() {
 
   useEffect(() => {
     if (data) {
-      setLiked(data.likes === 1);
-      setFavorited(data.favorites === 1);
+      setLiked(data.currentUserLike === true);
+      setFavorited(data.currentUserFavorite === true);
     }
   }, [data]);
+  
+  
 
   if (!data) return <div>로딩 중...</div>;
 
