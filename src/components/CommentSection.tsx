@@ -11,6 +11,7 @@ interface Comment {
   memberId: number;
   verifyId: string;
   replies: Comment[];
+  username: string;
 }
 
 interface CommentSectionProps {
@@ -54,14 +55,14 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
     if (eventId) fetchComments();
   }, [eventId]);
 
-  const handleStartChat = async (memberId: number, verifyId: string) => {
+  const handleStartChat = async (username: string, verifyId: string) => {
     const confirmStart = window.confirm("이 사용자와 채팅하시겠습니까?");
     if (!confirmStart) return;
   
     try {
       // 1. 채팅방 생성
       const response = await axiosInstance.post('/api/auth/user/chatrooms', {
-        name: `사용자${memberId}`,
+        name: `${username}`,
         type: 'DIRECT',
         path: `event ${eventId}`
       });
@@ -77,7 +78,7 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
       // 3. 이동
       navigate(`/chat/room/${chatRoomId}`, {
         state: {
-          roomTitle: `사용자${memberId}`,
+          roomTitle: `${username}`,
           participantCount: 2,
         },
       });
@@ -126,7 +127,7 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
                   className={styles.chatButton}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleStartChat(comment.memberId, comment.verifyId);
+                    handleStartChat(comment.username, comment.verifyId);
                   }}
                 >
                   채팅하기
