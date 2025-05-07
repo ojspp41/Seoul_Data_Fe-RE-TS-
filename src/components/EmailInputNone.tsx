@@ -3,7 +3,7 @@ import useUserStore from '../store/userStore';
 import styles from './css/EmailInput.module.css';
 
 const EmailInputNone: React.FC = () => {
-    const {email, setEmail} = useUserStore();
+    const {email} = useUserStore();
 
     return (
         <div className={styles.wrapper}>
