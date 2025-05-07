@@ -25,6 +25,8 @@ interface Festival {
   guName: string;
   currentUserLike: boolean;
   mainImg?: string;
+  rating: number;      // ⭐ 평점
+  likes: number;  
 }
 
 const MainpageLogin = () => {
@@ -41,6 +43,8 @@ const MainpageLogin = () => {
         params: { startDate: today, endDate: today, page, size: 5 },
       });
       const newEvents = response.data.data.content;
+      
+      console.log("pl",newEvents);
       setFestivals(prev => [...prev, ...newEvents]);
       if (newEvents.length < 5) setHasMore(false);
     } catch (error) {
@@ -92,6 +96,9 @@ const MainpageLogin = () => {
             location={festival.guName}
             likedDefault={festival.currentUserLike}
             mainImg={festival.mainImg}
+            rating={festival.rating || 3.0} // 없을 경우 기본값
+            likes={festival.likes || 0}
+            
           />
         </FestivalCardWrapper>
       ))}

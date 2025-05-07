@@ -26,6 +26,8 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
   const [replyModalOpen, setReplyModalOpen] = useState(false);
   const [targetCommentId, setTargetCommentId] = useState<number | null>(null);
   const [openReplies, setOpenReplies] = useState<Record<number, boolean>>({});
+  const [visibleCount, setVisibleCount] = useState(3);
+  const myVerifyId = localStorage.getItem('verify_id'); // ✅ 현재 로그인한 사용자 ID
 
 
   const fetchComments = async () => {
@@ -101,7 +103,7 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
       </div>
 
       {/* 댓글 목록 (3개만 보여줌) */}
-      {comments.slice(0, 3).map((comment) => {
+      {comments.slice(0, visibleCount).map((comment) => {
         const isOpen = openReplies[comment.commentId]; // 펼침 여부 상태
 
         return (
@@ -110,40 +112,46 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
 
             <div
               className={styles.metaRow}
-              onClick={() => {
-                setTargetCommentId(comment.commentId);
-                setReplyModalOpen(true);
-              }}
+              
             >
-              <div className={styles.metaLeft}>
+              <div
+                className={styles.metaLeft}
+                onClick={() => {
+                  setOpenReplies((prev) => ({
+                    ...prev,
+                    [comment.commentId]: !prev[comment.commentId],
+                  }));
+                }}
+              >
                 <img src="/assets/dislike.svg" alt="싫어요" />
                 <span className={styles.dislikeCount}>{comment.replies.length}</span>
               </div>
               <div className={styles.metaRight}>
                 <span className={styles.time}>· {formatDate(comment.createdAt)}</span>
-                <span className={styles.writer}>· 사용자{comment.memberId}</span>
+                <span className={styles.writer}>· {comment.username}</span>
                 
-                <button
-                  className={styles.chatButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleStartChat(comment.username, comment.verifyId);
-                  }}
-                >
-                  채팅하기
-                </button>
+                {comment.verifyId !== myVerifyId && (
+                  <button
+                    className={styles.chatButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStartChat(comment.username, comment.verifyId);
+                    }}
+                  >
+                    채팅하기
+                  </button>
+                )}
+
 
                 <button
                   className={styles.toggleRepliesBtn}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setOpenReplies((prev) => ({
-                      ...prev,
-                      [comment.commentId]: !prev[comment.commentId],
-                    }));
+                    setTargetCommentId(comment.commentId);
+                    setReplyModalOpen(true);
                   }}
                 >
-                  {isOpen ? "답글 숨기기" : "답글 보기"}
+                  답글 달기
                 </button>
               </div>
             </div>
@@ -156,7 +164,7 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
                     <div className={styles.replyText}>{reply.content}</div>
                     <div className={styles.metaRight}>
                       <span className={styles.time}>· {formatDate(reply.createdAt)}</span>
-                      <span className={styles.writer}>· 사용자{reply.memberId}</span>
+                      <span className={styles.writer}>· {reply.username}</span>
                     </div>
                   </div>
                 ))}
@@ -167,7 +175,15 @@ export default function CommentSection({ eventId }: CommentSectionProps) {
       })}
 
 
-      <button className={styles.moreButton}>댓글 더보기</button>
+      {visibleCount < comments.length && (
+        <button
+          className={styles.moreButton}
+          onClick={() => setVisibleCount((prev) => prev + 3)}
+        >
+          댓글 더보기
+        </button>
+      )}
+
       
       {/* 일반 댓글 작성 모달 */}
       {isModalOpen && (

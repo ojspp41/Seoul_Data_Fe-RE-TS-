@@ -13,6 +13,8 @@ interface FestivalCardProps {
   location: string;
   likedDefault?: boolean;
   mainImg?: string; // ✅ 추가
+  rating: number;      // ⭐ 평점
+  likes: number;  
 }
 
 const FestivalCard = ({
@@ -26,6 +28,8 @@ const FestivalCard = ({
   location,
   likedDefault ,
   mainImg,
+  rating,
+  likes,
 }: FestivalCardProps & { mainImg?: string }) => {
   const [liked, setLiked] = useState(likedDefault);
   const navigate = useNavigate(); 
@@ -66,18 +70,34 @@ const FestivalCard = ({
         </HeartButton>
       </CardWrapper>
 
-      <InfoWrapper>
+      <InfoWrapper onClick={handleClick}>
         <InfoRow>
             <FestivalName>{festivalName}</FestivalName>
             <DateText>{dateRange}</DateText>
         </InfoRow>
         <ExtraInfoRow>
-          <PriceText>{price}</PriceText>
-          <LocationText>
-            <img src="/assets/location.svg" alt="위치 아이콘" width={14} height={14} />
-            {location}
-          </LocationText>
-        </ExtraInfoRow>
+            <PriceText>{price}</PriceText>
+            <LocationText>
+              <img src="/assets/location.svg" alt="위치 아이콘" width={14} height={14} />
+              {location}
+            </LocationText>
+
+            <MetricsWrapper>
+              <MetricItem>
+                <img src="/assets/FestivalCard/star-mini.svg" alt="평점" />
+                <span style={{ color: '#FFB200' }}>{rating.toFixed(1)}</span>
+              </MetricItem>
+              <MetricItem>
+                <img src="/assets/FestivalCard/heart-mini.svg" alt="좋아요" />
+                <span style={{ color: '#CC4E00' }}>{likes}</span>
+              </MetricItem>
+              <MetricItem>
+                <img src="/assets/FestivalCard/chat-mini.svg" alt="댓글 수" />
+                <span style={{ color: '#E5004C' }}>{commentCount}</span>
+              </MetricItem>
+            </MetricsWrapper>
+          </ExtraInfoRow>
+
       </InfoWrapper>
     </>
   );
@@ -104,9 +124,9 @@ const CardWrapper = styled.div<{ $background?: string }>`
     content: "";
     position: absolute;
     inset: 0;
-    background: ${({ $background }) =>
+  background: ${({ $background }) =>
       $background
-        ? `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${$background})`
+        ? ` url(${$background})`
         : 'none'};
     background-size: cover;
     background-repeat: no-repeat;
@@ -139,21 +159,22 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1)); /* ✅ 아래에만 그림자 느낌 */
+  
 `;
+
 
 const MainText = styled.div`
-  color: rgb(0, 0, 0);
+  color: white; /* 기존 rgb(0, 0, 0) → white */
   font-weight: 600;
   font-size: 24px;
-
-  white-space: nowrap;           // 줄바꿈 없이 한 줄로
-  overflow: hidden;              // 넘치는 부분 숨기기
-  text-overflow: ellipsis;       // 넘친 텍스트 ... 처리
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-
 const SubText = styled.div`
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.8); /* 기존 0.5 → 더 선명하게 */
   font-weight: 500;
   font-size: 16px;
 `;
@@ -171,6 +192,11 @@ const HeartButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(1.2);
+  }
 
   img {
     width: 21px;
@@ -240,4 +266,26 @@ const LocationText = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: clamp(12px, 3.5vw, 14px);
+`;
+const MetricsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+`;
+
+const MetricItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  img {
+    width: 12px;
+    height: 12px;
+  }
+
+  span {
+    font-size: 12px;
+    font-weight: 500;
+  }
 `;

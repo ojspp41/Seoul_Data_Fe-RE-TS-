@@ -50,4 +50,10 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
-  
+  .emptyMessage {
+  text-align: center;
+  color: #888;
+  padding: 40px 0;
+  font-size: 15px;
+  font-weight: 500;
+}

@@ -28,4 +28,9 @@
     font-size: 16px;
     font-weight: 500;
   }
-  
+  .input:disabled {
+  background-color: #f0f0f0;
+  color: #999999;
+  cursor: not-allowed;
+  border: 1px solid #ddd;
+}

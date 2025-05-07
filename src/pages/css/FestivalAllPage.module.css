@@ -16,10 +16,6 @@
     cursor: pointer;
   }
   
-  .monthText {
-    font-size: 16px;
-    font-weight: 600;
-  }
   
   .dateBox {
     padding: 10px;
@@ -39,10 +35,11 @@
   .monthText {
   font-size: 16px;
   font-weight: 600;
-  display: inline-flex; /* 한 줄에 아이콘 포함 */
-  align-items: flex-end; /* 텍스트 기준 아래 정렬 */
-  gap: 6px; /* 텍스트와 아이콘 사이 여백 */
+  display: inline-flex;
+  align-items: center; /* ✅ 가운데 정렬 */
+  gap: 6px;
 }
+
 
 .monthText img {
   width: 16px;
@@ -159,4 +156,7 @@
 .search-input::placeholder {
   color: #C2C2C2;
   font-weight: 500;
+}
+.selected .dayLabel {
+  color: #fff;
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import BirthSelect from '../components/BirthSelect';
-import GenderSelect from '../components/GenderSelect';
-import EmailInput from '../components/EmailInput';
+import BirthSelectNone from '../components/BirthSelectNone';
+import GenderSelectNone from '../components/GendeSelectNone';
+import EmailInputNone from '../components/EmailInputNone';
 import NicknameInput from '../components/NicknameInput';
 import useUserStore from '../store/userStore';
 import styles from './css/RegisterPage.module.css';
@@ -13,36 +13,15 @@ const EditProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const { nickname, email, gender, birth } = useUserStore();
 
-  const [emailChecked, setEmailChecked] = useState(false);
-  const [emailCheckMessage, setEmailCheckMessage] = useState('');
-
-  const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email.trim());
-  };
+  
 
   const isBirthFilled = birth.year !== '' && birth.month !== '' && birth.day !== '';
   const isGenderFilled = gender !== '';
-  const isEmailValid = isValidEmail(email);
   const isNicknameFilled = nickname.trim() !== '';
 
-  const isFormValid = isBirthFilled && isGenderFilled && isEmailValid && isNicknameFilled && emailChecked;
+  const isFormValid = isBirthFilled && isGenderFilled  && isNicknameFilled  ;
 
-  const handleEmailCheck = async () => {
-    try {
-      await axiosInstance.get(`/api/auth/all-user/email/${email}`);
-      setEmailCheckMessage('사용 가능한 이메일입니다.');
-      setEmailChecked(true);
-    } catch (err: any) {
-      if (err.response?.status === 400) {
-        setEmailCheckMessage('이미 사용 중인 이메일이 있습니다.');
-      } else {
-        setEmailCheckMessage('이메일 확인 중 오류가 발생했습니다.');
-      }
-      setEmailChecked(false);
-      console.error('이메일 중복 확인 실패:', err);
-    }
-  };
+  
   
 
   const handleSubmit = async () => {
@@ -77,16 +56,12 @@ const EditProfilePage: React.FC = () => {
 
       <NicknameInput />
 
-      <div className={styles.emailSection}>
-        <EmailInput />
-        <button className={styles.emailCheckButton} onClick={handleEmailCheck}>
-          중복확인
-        </button>
-      </div>
-      {emailCheckMessage && <p className={styles.emailCheckMessage}>{emailCheckMessage}</p>}
-
-      <GenderSelect />
-      <BirthSelect />
+      
+        <EmailInputNone />
+      
+      
+      <GenderSelectNone />
+      <BirthSelectNone />
 
       <button className={styles.submitButton} disabled={!isFormValid} onClick={handleSubmit}>
         수정 완료

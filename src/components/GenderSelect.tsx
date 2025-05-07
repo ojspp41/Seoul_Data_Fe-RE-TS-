@@ -19,7 +19,8 @@ const GenderSelect: React.FC = () => {
         <button
           key={g}
           onClick={() => handleGenderClick(g)}
-          className={gender === g ? styles.selected : styles.button}
+          disabled 
+          className={`${styles.button} ${gender === g ? styles.selected : ''} ${styles.disabled}`}
         >
           {g}
         </button>

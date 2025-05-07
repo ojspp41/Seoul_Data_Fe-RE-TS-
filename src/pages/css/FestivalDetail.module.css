@@ -149,3 +149,61 @@
   font-weight: 500;
   color: #929292;
 }
+.moreContainer {
+    position: relative;
+  }
+  
+  /* 드롭다운 슬라이드 애니메이션 */
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .moreDropdown {
+    position: absolute;
+    top: 28px;
+    right: -10px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    animation: slideDown 0.5s ease-out; /* ✅ 슬라이드 애니메이션 */
+  }
+  
+  /* 메뉴 항목 스타일 */
+  .moreDropdown > div {
+    padding: 10px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+  }
+  
+  /* 아래 밑줄 효과 */
+  .moreDropdown > div::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    bottom: 6px;
+    width: 0;
+    height: 2px;
+    background-color: #555;
+    transition: width 0.3s;
+  }
+  
+  .moreDropdown > div:hover::after {
+    width: calc(100% - 28px); /* 좌우 padding 제외한 너비 */
+  }
+  
+  .moreDropdown > div:hover {
+    background-color: #f7f7f7;
+  }
+  

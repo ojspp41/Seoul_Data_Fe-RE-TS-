@@ -8,17 +8,16 @@ const MainPage = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.circle}></div>
+      <img src="/assets/main.svg" alt="메인 배경 이미지" className={styles.mainImage} />
+
 
       {/* 타이틀 애니메이션 */}
       <motion.div
         className={styles.titleContainer}
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0 }}
       >
-        <p className={styles.mainTitle}>축제정보가 내 손 안에,</p>
-        <p className={styles.mainTitle}>Festi-Seoul</p>
       </motion.div>
 
       {/* 텍스트 애니메이션 */}
@@ -26,7 +25,7 @@ const MainPage = () => {
         className={styles.joinText}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.6 }}
+        transition={{ delay: 0.7, duration: 0.2 }}
       >
         ⚡ 3초만에 빠른 가입 ⚡
       </motion.p>
@@ -37,7 +36,7 @@ const MainPage = () => {
         onClick={handleKakaoLogin}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1.2, duration: 0.4 }}
+        transition={{ delay: 1.0, duration: 0.2 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >

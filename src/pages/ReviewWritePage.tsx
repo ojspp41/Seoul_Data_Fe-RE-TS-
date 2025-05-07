@@ -69,6 +69,7 @@ export default function ReviewWritePage() {
           const payload = {
             eventId: numericEventId,
             content: review,
+            visitedAt:date,
             rating: Number(rating).toFixed(2),
             mediaList,
           };
@@ -84,7 +85,8 @@ export default function ReviewWritePage() {
           setDate("");
           setImage(null);
           setRating(0);
-          navigate(`/fest/detail/?eventId=${eventId}`); // 또는 다른 이동 경로
+          navigate(`/fest/detail/?eventId=${eventId}`, { replace: true });
+
         } catch (err) {
           console.error("❌ 리뷰 등록 실패:", err);
           alert("리뷰 등록 중 오류가 발생했습니다.");

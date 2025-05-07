@@ -83,25 +83,32 @@ const AIRecommendPage = () => {
       <p className={styles.subtitle}>고객님을 위한 AI 맞춤 제안</p>
 
       <div className={styles.list}>
-        {recommendData.map((item) => (
-          <motion.div
-            key={item.eventId}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-          >
-            <EventCard
-              category={item.category}
-              title={item.title}
-              location={item.guName}
-              dateRange={formatDate(item.startDate, item.endDate)}
-              mainImg={item.mainImg || '/assets/default-card.jpg'}
-              eventId={item.eventId}
-              onClick={(id) => navigate(`/fest/detail?eventId=${id}`)}
-            />
-          </motion.div>
-        ))}
-      </div>
+          {recommendData.length === 0 ? (
+            <div className={styles.emptyMessage}>
+              아직 AI 추천을 제공할 수 없습니다. 활동이 부족해요!
+            </div>
+          ) : (
+            recommendData.map((item) => (
+              <motion.div
+                key={item.eventId}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                <EventCard
+                  category={item.category}
+                  title={item.title}
+                  location={item.guName}
+                  dateRange={formatDate(item.startDate, item.endDate)}
+                  mainImg={item.mainImg || '/assets/default-card.jpg'}
+                  eventId={item.eventId}
+                  onClick={(id) => navigate(`/fest/detail?eventId=${id}`)}
+                />
+              </motion.div>
+            ))
+          )}
+        </div>
+
 
       <h3 className={styles.sectionTitle}>지금 인기있는 그 장소</h3>
 

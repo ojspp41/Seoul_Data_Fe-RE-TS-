@@ -19,7 +19,7 @@ interface CardItem {
 
 // 슬라이더 설정은 그대로 재사용
 const sliderSettings = {
-  dots: true,
+  dots: false,
   infinite: true,
   speed: 500,
   slidesToShow: 1,

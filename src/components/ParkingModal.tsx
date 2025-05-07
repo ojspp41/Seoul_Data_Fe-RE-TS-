@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react'; // ✅ useState 추가
+
 import styles from './css/ParkingModal.module.css';
 
 interface ParkingDetail {
@@ -22,6 +23,7 @@ interface ParkingDetail {
 interface ParkingModalProps {
   data: ParkingDetail;
   onClose: () => void;
+  onRefresh: () => void;
 }
 
 const getStatus = (available: number) => {
@@ -34,7 +36,15 @@ const splitTime = (time: string) => {
   return { start, end };
 };
 
-const ParkingModal: React.FC<ParkingModalProps> = ({ data, onClose }) => {
+const ParkingModal: React.FC<ParkingModalProps> = ({ data, onClose ,onRefresh}) => {
+  const [isRotating, setIsRotating] = useState(false); // ✅ 회전 상태 추가
+
+  const handleRefresh = () => {
+    if (isRotating) return;
+    setIsRotating(true);
+    onRefresh();
+    setTimeout(() => setIsRotating(false), 1000); // ✅ 애니메이션 끝나면 해제
+  };
   const available = data.totalSpace - data.currentParked;
   const status = getStatus(available);
   const weekday = splitTime(data.weekdayOperatingHours);
@@ -43,7 +53,14 @@ const ParkingModal: React.FC<ParkingModalProps> = ({ data, onClose }) => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <span className={styles.refresh}>새로고침</span>
+          <img
+            src="/assets/refresh-spin.svg"
+            alt="새로고침"
+            className={`${styles.refreshIcon} ${isRotating ? styles.rotate : ''}`}
+            onClick={handleRefresh}
+            style={isRotating ? { pointerEvents: 'none', opacity: 0.5 } : {}}
+          />
+
         <span className={styles.close} onClick={onClose}>닫기</span>
       </div>
 
@@ -53,9 +70,12 @@ const ParkingModal: React.FC<ParkingModalProps> = ({ data, onClose }) => {
         <div className={styles.dot} style={{ backgroundColor: status.color }} />
         <span className={styles.statusText}>{status.text}</span>
         <span className={styles.statusRatio}>
-          <span className={styles.availableCount}>{data.currentParked}</span> /
+          <span className={styles.availableCount}>
+            {Math.min(data.currentParked, data.totalSpace)}
+          </span> /
           <span className={styles.totalCount}> {data.totalSpace}</span>
         </span>
+
       </div>
 
       <div className={styles.row}>

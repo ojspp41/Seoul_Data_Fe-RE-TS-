@@ -104,6 +104,11 @@ export default function ParkingMap() {
         <div className={styles.title}>주차 시설 안내</div>
         <div className={styles.placeholder} />
       </div>
+      {coordsList.length > 0 && !selected && (
+        <div className={styles.guideBanner}>
+          마커를 클릭하면 상세 정보를 볼 수 있어요!
+        </div>
+      )}
 
       <Map center={center} style={{ width: '100%', height: 'calc(100vh - 56px)', marginTop: '56px' }} level={6}>
         {coordsList.map((coord) => (
@@ -112,7 +117,7 @@ export default function ParkingMap() {
             position={{ lat: coord.lat, lng: coord.lng }}
             onClick={() => handleMarkerClick(coord.data.parkingId)}
           >
-            <div style={{ fontWeight: 600 }} onClick={() => handleMarkerClick(coord.data.parkingId)} >{coord.data.parkingName}</div>
+            
           </MapMarker>
         ))}
       </Map>
@@ -121,6 +126,10 @@ export default function ParkingMap() {
         <ParkingModal
           data={selected} // detail 전체 응답
           onClose={() => setSelected(null)}
+          onRefresh={async () => {
+            const res = await axiosInstance.get(`/api/auth/user/parking/detail/${gu}/${selected.parkingId}`);
+            setSelected(res.data.data);
+          }}
         />
       
       )}

@@ -20,16 +20,16 @@ import MyReviewPage from '../pages/MyReviewPage'
 import TermsPage from '../pages/TermsPage'
 import BackgroundLayout from '../Layout/BackgroundLayout'
 import CustomerSupportPage from '../pages/CustomerSupportPage'
+import DeleteAccountPage from '../pages/DeleteAccountPage'
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <BackgroundLayout />,
     children: [
       { path: '/', element: <HomePage /> },
-      { path: '/register', element: <RegisterPage /> },
       
       
-      { path: '/profile', element: <EditProfilePage /> },
+      
       
       {
         path: '/support',
@@ -55,4 +55,8 @@ export const router = createBrowserRouter([
   { path: '/popular', element: <PopularPage /> },
       { path: '/scrap', element: <ScrapEventsPage /> },
       { path: '/term', element: <TermsPage /> },
+      { path: '/profile', element: <EditProfilePage /> },
+      
+      { path: '/register', element: <RegisterPage /> },
+      { path: '/delete', element: <DeleteAccountPage /> },
 ])

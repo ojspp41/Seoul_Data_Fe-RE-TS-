@@ -121,3 +121,22 @@
   font-weight: 500;
   color: #3D3D3D;
 }
+.refreshIcon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.rotate {
+  animation: rotate 1s linear;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -33,3 +33,10 @@
   border:none;
   text-align: center;
 }
+.disabled {
+  background-color: #f0f0f0 !important;
+  color: #b3b3b3 !important;
+  cursor: not-allowed;
+  pointer-events: none;
+  border: 1px solid #ddd;
+}

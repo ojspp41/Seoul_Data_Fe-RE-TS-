@@ -8,6 +8,7 @@ import axiosInstance from "../api/axiosInstance";
 import ReviewSection from "../components/ReviewSection";
 import useFestivalStore from "../store/useFestivalStore";
 import CommentSection from "../components/CommentSection";
+import { useRef } from "react"; // 스크롤 이동용
 
 const getStatus = (start: string, end: string) => {
   const today = new Date();
@@ -21,13 +22,29 @@ const getStatus = (start: string, end: string) => {
 
 export default function FestivalDetail() {
   const [searchParams] = useSearchParams();
+  const reviewSectionRef = useRef<HTMLDivElement>(null);
+  const commentSectionRef = useRef<HTMLDivElement>(null);
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
   const eventId = searchParams.get("eventId");
   const { setEventId, setEventData } = useFestivalStore();
   const [data, setData] = useState<any>();
   const [liked, setLiked] = useState(false);
   const [favorited, setFavorited] = useState(false);
   const navigate = useNavigate();
+  const copyToClipboard = () => {
+    if (!data?.orgLink) return alert('복사할 링크가 없습니다.');
+    navigator.clipboard.writeText(data.orgLink)
+      .then(() => alert("링크가 복사되었습니다!"))
+      .catch(() => alert("클립보드 복사에 실패했습니다."));
+  };
 
+  const scrollToReview = () => {
+    reviewSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const scrollToComment = () => {
+    commentSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
   useEffect(() => {
     if (!eventId) return;
     setEventId(eventId);
@@ -36,6 +53,7 @@ export default function FestivalDetail() {
       try {
         const response = await axiosInstance.get(`/api/auth/user/event/${eventId}`);
         const eventData = response.data.data;
+        
         setData(eventData);
         setEventData(eventData);
         console.log("eventData",eventData)
@@ -104,7 +122,22 @@ export default function FestivalDetail() {
           onClick={() => navigate(-1)}
           className={styles.backIcon}
         />
-        <img src="/assets/more.svg" alt="More" />
+        <div className={styles.moreContainer}>
+          <img
+            src={showMoreOptions ? "/assets/x.svg" : "/assets/more.svg"} // ✅ 아이콘 조건부 변경
+            alt="More"
+            onClick={() => setShowMoreOptions((prev) => !prev)}
+            className={styles.moreIcon}
+          />
+
+          {showMoreOptions && (
+            <div className={styles.moreDropdown}>
+              <div onClick={() => navigate(`/fest/detail/review/write?eventId=${eventId}`)}>리뷰 작성하기</div>
+              <div onClick={scrollToReview}>리뷰 보러가기</div>
+              <div onClick={scrollToComment}>댓글로 가기</div>
+            </div>
+          )}
+        </div>
       </div>
 
       <p className={styles.subtitle}>{data.category}</p>
@@ -149,7 +182,13 @@ export default function FestivalDetail() {
           onClick={toggleFavorite}
           className={styles.icon}
         />
-        <img src="/assets/send.svg" alt="Send Icon" />
+        <img
+          src="/assets/send.svg"
+          alt="Send Icon"
+          onClick={copyToClipboard}
+          className={styles.icon}
+        />
+
       </div>
 
       <div className={styles.websiteImage}>
@@ -181,8 +220,12 @@ export default function FestivalDetail() {
       <FestivalInfo values={detailInfo} />
       <FestivalMap lat={parseFloat(data.lot)} lng={parseFloat(data.lat)} guName={data.guName} />
       <FestivalDescription content={data.introduce || "등록된 설명이 없습니다."} />
-      <CommentSection eventId={eventId!} />
-      <ReviewSection eventId={eventId!} />
+      <div ref={commentSectionRef}>
+        <CommentSection eventId={eventId!} />
+      </div>
+      <div ref={reviewSectionRef}>
+        <ReviewSection eventId={eventId!} />
+      </div>
     </div>
   );
 }

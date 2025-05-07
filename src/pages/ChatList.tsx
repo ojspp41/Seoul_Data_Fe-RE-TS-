@@ -44,7 +44,7 @@ const categories = [
 ];
 
 const Chat: React.FC = () => {
-  const [selectedMode, setSelectedMode] = useState<'my' | 'unread' | 'group'>('unread');
+  const [selectedMode, setSelectedMode] = useState<'my' | 'unread' | 'group'>('my');
   const [visibleCount, setVisibleCount] = useState(4);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const [searchKeyword, setSearchKeyword] = useState<string>('');
@@ -116,7 +116,10 @@ const Chat: React.FC = () => {
   
 
   
-  const filteredChats = chatData.filter(chat => chat.mode === selectedMode);
+  const filteredChats = selectedMode === 'my'
+  ? chatData.filter(chat => chat.mode === 'my' || chat.mode === 'unread' ||chat.mode === 'group') // ✅ 수정: 그룹도 포함
+  : chatData.filter(chat => chat.mode === selectedMode);
+
   const navigate = useNavigate();
   
   const filteredGroupChats = groupChatList.filter(item => {
@@ -136,7 +139,7 @@ const Chat: React.FC = () => {
     >
       <div className={styles["chat-header"]}>
         <h2 className={styles["chat-tit"]}>채팅</h2>
-        <img src="/assets/setting.svg" alt="설정" className={styles["chat-icon"]} />
+        
       </div>
 
       <div className={styles["chat-filter-buttons"]}>

@@ -48,7 +48,7 @@ export default function FestivalAllPage() {
             startDate: formatDate(selectedDate),
             endDate: formatDate(selectedDate),
             page: 1,
-            size: 100,
+            size: 2000,
           },
         });
         setEvents(res.data.data.content);

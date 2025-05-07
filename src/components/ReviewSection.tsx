@@ -13,7 +13,7 @@ interface ReviewData {
   eventId: number;
   memberName: string;
   content: string;
-  createdAt: string;
+  visitedAt: string;
   rating: number;
   mediaList?: { imageUrl: string }[];
 }
@@ -23,7 +23,7 @@ export default function ReviewSection({ eventId }: ReviewSectionProps) {
   const [visibleCount, setVisibleCount] = useState(3);
   const [totalReviews, setTotalReviews] = useState(0);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -31,7 +31,7 @@ export default function ReviewSection({ eventId }: ReviewSectionProps) {
           `/api/auth/user/events/${eventId}/reviews`
         );
         const content = res.data.data.content;
-        console.log("res",res);
+        console.log("content",content);
         setReviews(content);
         setTotalReviews(res.data.data.page.totalElements);
       } catch (error) {
@@ -62,7 +62,7 @@ export default function ReviewSection({ eventId }: ReviewSectionProps) {
           onClick={() => navigate(`/fest/detail/review?eventId=${eventId}`)}
         >
           <img src="/assets/pencil.svg" alt="리뷰 작성" />
-          리뷰 작성하기
+          리뷰 전체보기
         </button>
       </div>
 
@@ -72,7 +72,7 @@ export default function ReviewSection({ eventId }: ReviewSectionProps) {
         <ReviewItem
             key={review.id}
             name={review.memberName}
-            visitDate={new Date(review.createdAt).toLocaleDateString("ko-KR")}
+            visitDate={new Date(review.visitedAt).toLocaleDateString("ko-KR")}
             content={review.content}
             mediaList={review.mediaList}
         />
@@ -82,7 +82,7 @@ export default function ReviewSection({ eventId }: ReviewSectionProps) {
       {/* 더보기 버튼 */}
       {hasMore && (
         <button className={styles.moreBtn} onClick={handleShowMore}>
-          더보기
+          리뷰 더보기
         </button>
       )}
     </div>

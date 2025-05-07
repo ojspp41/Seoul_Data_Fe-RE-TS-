@@ -25,13 +25,14 @@ const AuthRedirect = () => {
             },
           }
         );
-        const { accessToken, refreshToken, role } = response.data.data;
+        const { accessToken, refreshToken, role , verifyId} = response.data.data;
         console.log(role)
 
         // 토큰 저장
         localStorage.setItem('access_token', accessToken);
         localStorage.setItem('refresh_token', refreshToken);
-
+        localStorage.setItem('verify_id', verifyId);
+        
         // 역할에 따라 이동
         if (role === 'ROLE_SEMI_USER') {
           navigate('/register'); // 추가정보 입력 페이지

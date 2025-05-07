@@ -17,9 +17,9 @@ const navItems = [
     path: '/chat',
   },
   {
-    label: '커뮤니티',
-    icon: '/assets/community.svg',
-    activeIcon: '/assets/community.svg',
+    label: '검색색',
+    icon: '/assets/search-bottom.svg',
+    activeIcon: '/assets/search-active.svg',
     path: '/fest/all',
   },
   {
