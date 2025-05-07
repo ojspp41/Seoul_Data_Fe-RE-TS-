@@ -3,15 +3,9 @@ import useUserStore from '../store/userStore';
 import styles from './css/GenderSelect.module.css';
 
 const GenderSelectNone: React.FC = () => {
-  const { gender, setGender } = useUserStore();
+  const { gender } = useUserStore();
 
-  const handleGenderClick = (selectedGender: string) => {
-    if (gender === selectedGender) {
-      setGender(''); // 또는 null 사용 가능
-    } else {
-      setGender(selectedGender);
-    }
-  };
+  
   const handleBlockedClick = () => {
     alert('성별은 수정할 수 없습니다.');
   };

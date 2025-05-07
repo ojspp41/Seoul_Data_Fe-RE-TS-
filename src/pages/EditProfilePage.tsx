@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import BirthSelectNone from '../components/BirthSelectNone';
 import GenderSelectNone from '../components/GendeSelectNone';
 import EmailInputNone from '../components/EmailInputNone';
