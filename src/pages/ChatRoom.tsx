@@ -21,7 +21,12 @@ interface ChatMessageData {
   message: string;
   time: string;
 }
-
+interface RawMessage {
+  messageId: number;
+  senderVerifyId: string;
+  content: string;
+  createdAt: string;
+}
 const ChatRoom: React.FC = () => {
   const [focused, setFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -59,10 +64,13 @@ const ChatRoom: React.FC = () => {
   }, [roomId]);
 
   const fetchMessages = async (verifyId: string) => {
-    const response = await axiosInstance.get(`/api/auth/user/chat/rooms/${roomId}/messages`);
-    const sortedMessages = response.data.data.content
-      .sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-      .map((msg: any) => ({
+    const response = await axiosInstance.get<{ data: { content: RawMessage[] } }>(
+      `/api/auth/user/chat/rooms/${roomId}/messages`
+    );
+  
+    const sortedMessages: ChatMessageData[] = response.data.data.content
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+      .map((msg) => ({
         id: msg.messageId,
         sender: msg.senderVerifyId === verifyId ? 'me' : 'other',
         message: msg.content,
@@ -71,8 +79,10 @@ const ChatRoom: React.FC = () => {
           minute: '2-digit',
         }),
       }));
+  
     setMessages(sortedMessages);
   };
+  
   
   const setupWebSocket = async (verifyId: string) => {
     if (!roomId) return;
