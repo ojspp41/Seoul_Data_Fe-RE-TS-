@@ -55,7 +55,7 @@ const FestivalCard = ({
   return (
     <>
       <CardWrapper $background={mainImg} onClick={handleClick}>
-        <CommentBadge>댓글 {commentCount}개</CommentBadge>
+        <CommentBadge>평점 {rating.toFixed(1)}</CommentBadge>
 
         <ContentWrapper>
           <MainText>{mainText}</MainText>
@@ -80,6 +80,7 @@ const FestivalCard = ({
             <LocationText>
               <img src="/assets/location.svg" alt="위치 아이콘" width={14} height={14} />
               {location}
+              
             </LocationText>
 
             <MetricsWrapper>
@@ -212,8 +213,8 @@ const FestivalName = styled.div`
 `;
 
 const InfoWrapper = styled.div`
-  background-color:rgb(255, 255, 255);
-  padding: 16px;
+  background-color:transport;
+  padding: 0px 8px;
   width: calc(100% - 40px);
   margin: 0 auto ;
   border-radius: 0 0 16px 16px;

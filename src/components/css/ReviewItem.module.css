@@ -52,3 +52,17 @@
   height: 1px;
   background-color: #E0E0E0;
 }
+/* ReviewItem.module.css */
+.deleteBtn {
+  background: none;
+  border: none;
+  color: #cc4e00;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  font-size: 14px;
+}
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

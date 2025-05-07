@@ -5,7 +5,7 @@ import EventCard from '../components/EventCard';
 import RankedCard from '../components/RankedCard';
 import styles from './css/AIRecommendPage.module.css';
 import axiosInstance from '../api/axiosInstance';
-
+import BottomNav from '../components/BottomNav';
 interface CardItem {
   eventId: number;
   title: string;
@@ -125,11 +125,12 @@ const AIRecommendPage = () => {
               title={item.title}
               dateRange={formatDate(item.startDate, item.endDate)}
               mainImg={item.mainImg || '/assets/default-card.jpg'}
-              onClick={() => navigate(`/event/${item.eventId}`)}
+              onClick={() => navigate(`/fest/detail?eventId=${item.eventId}`)}
             />
           </motion.div>
         ))}
       </div>
+      <BottomNav/>
     </motion.div>
   );
 };

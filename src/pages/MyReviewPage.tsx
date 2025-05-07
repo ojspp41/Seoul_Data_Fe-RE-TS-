@@ -85,10 +85,16 @@ const MyReviewPage = () => {
                                             cursor: 'pointer'
                                         }}>
                                         <ReviewItem
-                                            name={review.memberName}
-                                            visitDate={new Date(review.createdAt).toLocaleDateString('ko-KR')}
-                                            content={review.content}
-                                            mediaList={review.mediaList}/>
+                                        reviewId={review.id}
+                                        name={review.memberName}
+                                        visitDate={new Date(review.createdAt).toLocaleDateString('ko-KR')}
+                                        content={review.content}
+                                        mediaList={review.mediaList}
+                                        onDelete={() =>
+                                            setReviews((prev) => prev.filter((r) => r.id !== review.id))
+                                        }
+                                        />
+
                                     </motion.div>
                                 ))
                             }

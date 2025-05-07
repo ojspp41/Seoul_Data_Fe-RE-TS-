@@ -72,7 +72,7 @@ const ChatRoom: React.FC = () => {
       .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
       .map((msg) => ({
         id: msg.messageId,
-        sender: msg.senderVerifyId === verifyId ? 'me' : 'other',
+        sender: msg.senderVerifyId === verifyId ? 'other' : 'me',
         message: msg.content,
         time: new Date(msg.createdAt).toLocaleTimeString([], {
           hour: '2-digit',
@@ -97,7 +97,7 @@ const ChatRoom: React.FC = () => {
         ...prev,
         {
           id: body.messageId,
-          sender: body.senderVerifyId === verifyId ? 'me' : 'other',
+          sender: body.senderVerifyId === verifyId ? 'other' : 'me',
           message: body.content,
           time: new Date(body.createdAt).toLocaleTimeString([], {
             hour: '2-digit',

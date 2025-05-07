@@ -33,7 +33,8 @@ export default function FestivalInfo({ values }: FestivalInfoProps) {
         />
       </div>
 
-      {isOpen && (
+      {(
+      <div className={`${styles.infoWrapper} ${isOpen ? styles.open : ''}`}>
         <ul className={styles.infoList}>
           <li className={styles.infoItem}>
             <img src="/assets/detail/location.svg" className={styles.icon} alt="장소 아이콘" />
@@ -83,6 +84,7 @@ export default function FestivalInfo({ values }: FestivalInfoProps) {
             </div>
           </li>
         </ul>
+        </div>
       )}
     </div>
   );

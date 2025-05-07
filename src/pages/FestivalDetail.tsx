@@ -9,7 +9,8 @@ import ReviewSection from "../components/ReviewSection";
 import useFestivalStore from "../store/useFestivalStore";
 import CommentSection from "../components/CommentSection";
 import { useRef } from "react"; // 스크롤 이동용
-
+import { motion } from 'framer-motion';
+import BottomNav from "../components/BottomNav";
 const getStatus = (start: string, end: string) => {
   const today = new Date();
   const startDate = new Date(start);
@@ -31,6 +32,8 @@ export default function FestivalDetail() {
   const [liked, setLiked] = useState(false);
   const [favorited, setFavorited] = useState(false);
   const navigate = useNavigate();
+  const [likeAnimation, setLikeAnimation] = useState(false);
+const [favoriteAnimation, setFavoriteAnimation] = useState(false);
   const copyToClipboard = () => {
     if (!data?.orgLink) return alert('복사할 링크가 없습니다.');
     navigator.clipboard.writeText(data.orgLink)
@@ -95,6 +98,8 @@ export default function FestivalDetail() {
         await axiosInstance.post(`/api/auth/user/event/like/${eventId}`);
       }
       setLiked(!liked);
+      setLikeAnimation(true);
+      setTimeout(() => setLikeAnimation(false), 300); // 애니메이션 지속 시간
     } catch (error) {
       console.error("좋아요 처리 실패:", error);
     }
@@ -108,18 +113,22 @@ export default function FestivalDetail() {
         await axiosInstance.post(`/api/auth/user/event/favorite/${eventId}`);
       }
       setFavorited(!favorited);
+      setFavoriteAnimation(true);
+      setTimeout(() => setFavoriteAnimation(false), 300);
     } catch (error) {
       console.error("즐겨찾기 처리 실패:", error);
     }
   };
 
   return (
-    <div className={styles.container}>
+    <motion.div className={styles.container} initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}>
       <div className={styles.header}>
         <img
           src="/assets/back.svg"
           alt="Back"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/mainpage')}
           className={styles.backIcon}
         />
         <div className={styles.moreContainer}>
@@ -146,6 +155,10 @@ export default function FestivalDetail() {
       <div className={styles.locationInfoRow}>
         <img src="/assets/detail/map.svg" alt="Map Icon" className={styles.mapIcon} />
         <span className={styles.locationText}>{data.guName || "어디구 있지도 있어"}</span>
+        <img src="/assets/FestivalCard/star-mini.svg" alt="평점" />
+        <span style={{ color: '#FFB200' }}>{data.rating.toFixed(1)}</span>
+        <img src="/assets/FestivalCard/heart-mini.svg" alt="좋아요" />
+                <span style={{ color: '#CC4E00' }}>{data.likes}</span>
       </div>
 
       <div className={styles.dateRow}>
@@ -170,18 +183,25 @@ export default function FestivalDetail() {
       </div>
 
       <div className={styles.iconContainer}>
-        <img
+        <motion.img
           src={liked ? "/assets/hart-fill.svg" : "/assets/hart.svg"}
           alt="Heart Icon"
           onClick={toggleLike}
           className={styles.icon}
+          animate={likeAnimation ? { scale: [1, 1.3, 1] } : {}}
+          transition={{ duration: 0.4 }}
         />
-        <img
+
+        <motion.img
           src={favorited ? "/assets/star-fill.svg" : "/assets/star.svg"}
           alt="Star Icon"
           onClick={toggleFavorite}
           className={styles.icon}
+          animate={favoriteAnimation ? { scale: [1, 1.3, 1] } : {}}
+          transition={{ duration: 0.4 }}
         />
+
+
         <img
           src="/assets/send.svg"
           alt="Send Icon"
@@ -225,7 +245,9 @@ export default function FestivalDetail() {
       </div>
       <div ref={reviewSectionRef}>
         <ReviewSection eventId={eventId!} />
+        
       </div>
-    </div>
+      <BottomNav/>
+    </motion.div>
   );
 }

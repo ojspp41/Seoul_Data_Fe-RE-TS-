@@ -62,4 +62,15 @@
     margin: 4px 0 0 0;
     white-space: pre-line;
   }
-  
+  /* .infoList에 transition 효과 적용 */
+.infoWrapper {
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  max-height: 0;
+  opacity: 0;
+}
+
+.infoWrapper.open {
+  max-height: 800px; /* 충분히 큰 값으로 지정 */
+  opacity: 1;
+}

@@ -17,9 +17,9 @@ export default function FestivalMap({lat, lng,guName} : FestivalMapProps) {
     console.log("position",position);
     const navigate = useNavigate();
     const handleParkingClick = () => {
-        navigate(`/map?gu=${encodeURIComponent(guName)}`);
+        navigate(`/map?gu=${encodeURIComponent(guName)}&lat=${lat}&lng=${lng}`);
     };
-
+      
     return (
         <div className={styles.container}>
             <p className={styles.direction}>길찾기</p>

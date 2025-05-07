@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { Map, MapMarker,CustomOverlayMap  } from 'react-kakao-maps-sdk';
 import axiosInstance from '../api/axiosInstance';
 import ParkingModal from '../components/ParkingModal';
 import styles from './css/ParkingHeader.module.css';
@@ -41,10 +41,17 @@ export default function ParkingMap() {
   const [searchParams] = useSearchParams();
   const gu = searchParams.get('gu') || '강남구';
   const navigate = useNavigate();
-
+  const latParam = parseFloat(searchParams.get('lat') || '');
+  const lngParam = parseFloat(searchParams.get('lng') || '');
+  const hasCenterFromParams = !isNaN(latParam) && !isNaN(lngParam);
+  const [center, setCenter] = useState<{ lat: number; lng: number }>(() => {
+    return hasCenterFromParams
+      ? { lat: latParam, lng: lngParam }
+      : { lat: 37.4979, lng: 127.0276 }; // 기본값
+  });
+  
   const [coordsList, setCoordsList] = useState<Coords[]>([]);
   const [selected, setSelected] = useState<ParkingDetail | null>(null);
-  const [center, setCenter] = useState<{ lat: number; lng: number }>({ lat: 37.4979, lng: 127.0276 });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,9 +79,10 @@ export default function ParkingMap() {
         }
 
         setCoordsList(coordsWithLatLng);
-        if (coordsWithLatLng.length > 0) {
+        if (coordsWithLatLng.length > 0 && !hasCenterFromParams) {
           setCenter({ lat: coordsWithLatLng[0].lat, lng: coordsWithLatLng[0].lng });
         }
+        
       } catch (error) {
         console.error('주차장 목록 불러오기 실패', error);
       }
@@ -106,11 +114,43 @@ export default function ParkingMap() {
       </div>
       {coordsList.length > 0 && !selected && (
         <div className={styles.guideBanner}>
-          마커를 클릭하면 상세 정보를 볼 수 있어요!
+          마커를 클릭하면 주차장 상세 정보를 볼 수 있어요!
         </div>
       )}
 
-      <Map center={center} style={{ width: '100%', height: 'calc(100vh - 56px)', marginTop: '56px' }} level={6}>
+      <Map center={center} style={{ width: '100%', height: 'calc(100vh - 56px)', marginTop: '56px' }} level={4}>
+      
+        {hasCenterFromParams && (
+          <>
+            {/* 축제 위치 마커 */}
+            <MapMarker
+              position={{ lat: latParam, lng: lngParam }}
+              image={{
+                src: '/assets/detail/festival-marker.svg',
+                size: { width: 36, height: 36 },
+                options: { offset: { x: 18, y: 36 } },
+              }}
+            />
+            
+            {/* 텍스트 오버레이 */}
+            <CustomOverlayMap position={{ lat: latParam, lng: lngParam }}>
+              <div style={{
+                background: 'black',
+                color: '#fff',
+                fontSize: '12px',
+                fontWeight: 600,
+                padding: '4px 8px',
+                borderRadius: '8px',
+                transform: 'translate(4%, -180%)',
+                whiteSpace: 'nowrap',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+              }}>
+                축제장소
+              </div>
+            </CustomOverlayMap>
+          </>
+        )}
+
         {coordsList.map((coord) => (
           <MapMarker
             key={coord.data.parkingId}

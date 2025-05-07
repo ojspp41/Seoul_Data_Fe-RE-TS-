@@ -70,11 +70,16 @@ export default function ReviewSection({ eventId }: ReviewSectionProps) {
       <div className={styles.list}>
       {visibleReviews.map((review) => (
         <ReviewItem
-            key={review.id}
-            name={review.memberName}
-            visitDate={new Date(review.visitedAt).toLocaleDateString("ko-KR")}
-            content={review.content}
-            mediaList={review.mediaList}
+          key={review.id}
+          reviewId={review.id}
+          name={review.memberName}
+          visitDate={new Date(review.visitedAt).toLocaleDateString("ko-KR")}
+          content={review.content}
+          mediaList={review.mediaList}
+          onDelete={() => {
+            setReviews((prev) => prev.filter((r) => r.id !== review.id));
+            setTotalReviews((prev) => prev - 1);
+          }}
         />
         ))}
       </div>

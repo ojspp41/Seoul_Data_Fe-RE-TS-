@@ -35,14 +35,15 @@
   }
   
   .chatroom-my-message .chatroom-message-bubble {
-    background-color: #FFFCFD;
-    color: #1A1A1A;
+    background-color: #3977F4;
+    color: white;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .chatroom-other-message .chatroom-message-bubble {
-    background-color: #3977F4;
-    color: white;
+    
+    background-color: #FFFCFD;
+    color: #1A1A1A;
   }
   
   .chatroom-message-text {
