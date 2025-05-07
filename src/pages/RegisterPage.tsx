@@ -32,18 +32,17 @@ const RegisterPage: React.FC = () => {
 
   const handleEmailCheck = async () => {
     try {
-      const response = await axiosInstance.get(`/api/auth/all-user/email/${email}`);
-      if (response.data.data.available) {
-        setEmailCheckMessage('사용 가능한 이메일입니다.');
-        setEmailChecked(true);
+      await axiosInstance.get(`/api/auth/all-user/email/${email}`);
+      setEmailCheckMessage('사용 가능한 이메일입니다.');
+      setEmailChecked(true);
+    } catch (err: any) {
+      if (err.response?.status === 400) {
+        setEmailCheckMessage('이미 사용 중인 이메일이 있습니다.');
       } else {
-        setEmailCheckMessage('이미 사용 중인 이메일입니다.');
-        setEmailChecked(false);
+        setEmailCheckMessage('이메일 확인 중 오류가 발생했습니다.');
       }
-    } catch (err) {
-      console.error('이메일 중복 확인 실패:', err);
-      setEmailCheckMessage('이메일 확인 중 오류가 발생했습니다.');
       setEmailChecked(false);
+      console.error('이메일 중복 확인 실패:', err);
     }
   };
 
