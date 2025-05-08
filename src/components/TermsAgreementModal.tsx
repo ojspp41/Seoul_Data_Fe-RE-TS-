@@ -113,53 +113,68 @@ const TermsAgreementModal: React.FC<TermsAgreementModalProps> = ({
       </Modal>
 
       <Modal
-      isOpen={isAgreementOpen}
-      onRequestClose={handleCloseAgreement}
-      contentLabel="개인정보 처리방침"
-      className={styles.Modal_TERM}
-      overlayClassName={styles.Overlay_TERM}
-    >
-      <div className={styles.agreement_box_TERM}>
-        <p style={{ textAlign: 'left', whiteSpace: 'pre-wrap' }}>
-          오늘, 서울 개인정보 처리방침
+        isOpen={isAgreementOpen}
+        onRequestClose={handleCloseAgreement}
+        contentLabel="개인정보 처리방침"
+        className={styles.Modal_TERM}
+        overlayClassName={styles.Overlay_TERM}
+      >
+        <div className={styles.agreement_box_TERM}>
+          <div className={styles.policyContent}>
+            <h2>📄 오늘, 서울 개인정보 처리방침</h2>
+            <p>‘오늘, 서울’은 아래와 같은 목적과 범위 내에서 개인정보를 수집 및 이용합니다.<br />
+            회원님의 개인정보는 안전하게 보호되며, 서비스 제공을 위해 꼭 필요한 항목만 최소한으로 수집합니다.</p>
 
-          - 서비스명 ‘오늘, 서울’은 아래의 목적으로 개인정보를 수집∙이용합니다.
-          - 회원의 소중한 개인정보를 보호하고, 안전하게 서비스를 제공하기 위해 최선을 다하겠습니다.
-          - 아래 내용을 충분히 읽으신 후 동의 여부를 결정해 주세요.
+            <h3>1. 회원가입 및 로그인</h3>
+            <ul>
+              <li><strong>수집 항목:</strong> 카카오톡 ID, 생년월일, 성별, 닉네임, 이메일</li>
+              <li><strong>보관 기간:</strong> 회원 탈퇴 시 즉시 삭제</li>
+            </ul>
 
-          ▶ 개인정보 수집∙이용 내역
+            <h3>2. 맞춤형 행사 추천 (AI 기반)</h3>
+            <ul>
+              <li><strong>수집 항목:</strong> 검색 이력, 스크랩, 카테고리 관심사</li>
+              <li><strong>보관 기간:</strong> 회원 탈퇴 시 즉시 삭제</li>
+            </ul>
 
-          1. ‘오늘, 서울’ 회원가입 및 로그인
-            - 수집 항목: 카카오톡 ID, 생년월일, 성별, 닉네임, 이메일
-            - 보관 기간: 회원 탈퇴 시 즉시 삭제
+            <h3>3. 축제 동행인 채팅 서비스</h3>
+            <ul>
+              <li><strong>수집 항목:</strong> 채팅 메시지 내용, 채팅방 참여 기록</li>
+              <li><strong>보관 기간:</strong> 회원 탈퇴 시 즉시 삭제</li>
+            </ul>
 
-          2. 맞춤형 행사 추천(AI 기반)
-            - 수집 항목: 검색 이력, 스크랩, 카테고리 관심사
-            - 보관 기간: 회원 탈퇴 시 즉시 삭제
+            <h3>4. 고객 문의 및 지원 응대</h3>
+            <ul>
+              <li><strong>수집 항목:</strong> 문의 내용, 이메일, 닉네임</li>
+              <li><strong>보관 기간:</strong> 3년간 보관 후 삭제</li>
+            </ul>
 
-          3. 축제 동행인 채팅 서비스
-            - 수집 항목: 채팅 메시지 내용, 채팅방 참여 기록
-            - 보관 기간: 회원 탈퇴 시 즉시 삭제
+            <h3>5. 유료 서비스 환불 처리</h3>
+            <ul>
+              <li><strong>수집 항목:</strong> 은행명, 계좌번호</li>
+              <li><strong>보관 기간:</strong> 5년간 보관 후 삭제 (전자상거래법 준수)</li>
+            </ul>
 
-          4. 고객 문의 및 지원 응대
-            - 수집 항목: 문의 내용, 이메일, 닉네임
-            - 보관 기간: 3년간 보관 후 삭제
+            <div className={styles.noticeBox}>
+              <strong>※ 안내:</strong><br />
+              귀하는 개인정보 수집 및 이용에 대해 동의를 거부할 권리가 있습니다.<br />
+              다만, 동의하지 않으면 ‘오늘, 서울’의 일부 서비스 이용이 제한될 수 있습니다.
+            </div>
 
-          5. 유료 서비스 환불 처리 (해당 시)
-            - 수집 항목: 은행명, 계좌번호
-            - 보관 기간: 5년간 보관 후 삭제 (전자상거래법 준수)
+            <p className={styles.contactInfo}>
+              <strong>개인정보 처리 책임자:</strong> 오준석<br />
+              <strong>문의 오픈 채팅:</strong>{' '}
+              <a href="https://open.kakao.com/o/sXpLyXuh" target="_blank" rel="noopener noreferrer">
+                https://open.kakao.com/o/sXpLyXuh
+              </a>
+            </p>
+          </div>
 
-          ※ 귀하는 위 개인정보 수집 및 이용에 대해 동의를 거부할 권리가 있습니다.
-            단, 동의하지 않을 경우 ‘오늘, 서울’의 회원가입, AI 추천, 동행 채팅 등 서비스 이용이 제한될 수 있습니다.
-
-          개인정보 처리 책임자: 오준석
-          문의 오픈 채팅: https://open.kakao.com/o/sXpLyXuh
-        </p>
-        <div className={styles.cancel_button_TERM} onClick={handleCloseAgreement}>
-          닫기
+          <div className={styles.cancel_button_TERM} onClick={handleCloseAgreement}>
+            닫기
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
 
     </>
   );
