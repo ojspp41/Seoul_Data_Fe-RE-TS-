@@ -160,13 +160,12 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1)); /* ✅ 아래에만 그림자 느낌 */
-  
+  background: linear-gradient(to top, rgb(255 255 255 / 64%), rgb(255 255 255 / 37%));
 `;
 
 
 const MainText = styled.div`
-  color: white; /* 기존 rgb(0, 0, 0) → white */
+  color: black; /* 기존 rgb(0, 0, 0) → white */
   font-weight: 600;
   font-size: 24px;
   white-space: nowrap;
@@ -175,7 +174,7 @@ const MainText = styled.div`
 `;
 
 const SubText = styled.div`
-  color: rgba(255, 255, 255, 0.8); /* 기존 0.5 → 더 선명하게 */
+  color: black; /* 기존 0.5 → 더 선명하게 */
   font-weight: 500;
   font-size: 16px;
 `;
