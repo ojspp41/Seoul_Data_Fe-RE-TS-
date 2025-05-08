@@ -113,52 +113,54 @@ const TermsAgreementModal: React.FC<TermsAgreementModalProps> = ({
       </Modal>
 
       <Modal
-        isOpen={isAgreementOpen}
-        onRequestClose={handleCloseAgreement}
-        contentLabel="Personal Information Collection"
-        className={styles.Modal_TERM}
-        overlayClassName={styles.Overlay_TERM}
-      >
-        <div className={styles.agreement_box_TERM}>
-          <p style={{ textAlign: 'left' }}>
-            개인정보 수집 안내
-            <br />
-            <br /> 1. 개인정보 수집 목적
-            <br />
-            - 가톨릭대학교 중앙동아리 COMA는 다음 목적을 위해 개인정보를 수집합니다:
-            <br />
-            &nbsp; - 가톨릭대학교 총학생회 주관 아우름제 COMA 노점 이벤트인 COMAtching의 참여
-            <br />
-            <br />
-            2. 수집하는 개인정보 항목 * 수집하는 개인정보 항목은 다음과 같습니다:{' '}
-            <br />
-            &nbsp;* 인적사항 <br />
-            &nbsp; &nbsp;* 성명, 학번, 연락처 <br />
-            <br />
-            3. 개인정보 제 3자 제공 <br />
-            &nbsp;* 수집한 개인정보는 다음 3자에게 정보가 제공됩니다: <br />
-            &nbsp; &nbsp;* COMAtching 참여자 <br />
-            4. 개인정보 보유 및 이용기간 <br />
-            <br />
-            &nbsp;2024년 5월 24일 23시 59분까지
-            <br />
-            <br /> * 개인정보는 수집 및 이용목적이 달성되면 지체 없이 파기됩니다. 다만, 관련 법규에 따라 보존할 필요가 있는 경우에는 해당 기간 동안
-            안전하게 보관됩니다. <br />
-            <br /> 5. 개인정보 수집 거부권 * 개인정보의 수집은 자발적으로 제공하실 수 있으며, 수집에 동의하지 않을 권리가 있습니다. 다만, 일부 정보를
-            제공하지 않을 경우 가톨릭대 중앙동아리 COMA의 일부 서비스를 이용할 수 없을 수 있습니다. <br />
-            <br /> 6. 개인정보 관련 문의 및 민원처리 <br />* 개인정보 수집과 관련한 문의사항이나 민원은 다음으로 문의해 주시기 바랍니다: <br />
-            &nbsp;* 최고 정보 관리 책임자 : 가톨릭대학교 중앙동아리 COMA
-            <br /> &nbsp;* 개인정보보호책임자 : 가톨릭대학교 정보통신전자공학부 19학번 박승원 <br />
-            &nbsp;* 개인정보 수집 및 이용 주체 : 가톨릭대학교 중앙 IT동아리 COMA{' '}
-            <br />
-            <br />
-            7. 개인정보 수집 및 이용 동의 * 본인은 개인정보 수집 및 이용에 대해 동의합니다.
-          </p>
-          <div className={styles.cancel_button_TERM} onClick={handleCloseAgreement}>
-            닫기
-          </div>
+      isOpen={isAgreementOpen}
+      onRequestClose={handleCloseAgreement}
+      contentLabel="개인정보 처리방침"
+      className={styles.Modal_TERM}
+      overlayClassName={styles.Overlay_TERM}
+    >
+      <div className={styles.agreement_box_TERM}>
+        <p style={{ textAlign: 'left', whiteSpace: 'pre-wrap' }}>
+          오늘, 서울 개인정보 처리방침
+
+          - 서비스명 ‘오늘, 서울’은 아래의 목적으로 개인정보를 수집∙이용합니다.
+          - 회원의 소중한 개인정보를 보호하고, 안전하게 서비스를 제공하기 위해 최선을 다하겠습니다.
+          - 아래 내용을 충분히 읽으신 후 동의 여부를 결정해 주세요.
+
+          ▶ 개인정보 수집∙이용 내역
+
+          1. ‘오늘, 서울’ 회원가입 및 로그인
+            - 수집 항목: 카카오톡 ID, 생년월일, 성별, 닉네임, 이메일
+            - 보관 기간: 회원 탈퇴 시 즉시 삭제
+
+          2. 맞춤형 행사 추천(AI 기반)
+            - 수집 항목: 검색 이력, 스크랩, 카테고리 관심사
+            - 보관 기간: 회원 탈퇴 시 즉시 삭제
+
+          3. 축제 동행인 채팅 서비스
+            - 수집 항목: 채팅 메시지 내용, 채팅방 참여 기록
+            - 보관 기간: 회원 탈퇴 시 즉시 삭제
+
+          4. 고객 문의 및 지원 응대
+            - 수집 항목: 문의 내용, 이메일, 닉네임
+            - 보관 기간: 3년간 보관 후 삭제
+
+          5. 유료 서비스 환불 처리 (해당 시)
+            - 수집 항목: 은행명, 계좌번호
+            - 보관 기간: 5년간 보관 후 삭제 (전자상거래법 준수)
+
+          ※ 귀하는 위 개인정보 수집 및 이용에 대해 동의를 거부할 권리가 있습니다.
+            단, 동의하지 않을 경우 ‘오늘, 서울’의 회원가입, AI 추천, 동행 채팅 등 서비스 이용이 제한될 수 있습니다.
+
+          개인정보 처리 책임자: 오준석
+          문의 오픈 채팅: https://open.kakao.com/o/sXpLyXuh
+        </p>
+        <div className={styles.cancel_button_TERM} onClick={handleCloseAgreement}>
+          닫기
         </div>
-      </Modal>
+      </div>
+    </Modal>
+
     </>
   );
 };

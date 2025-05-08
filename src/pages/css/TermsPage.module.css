@@ -41,17 +41,53 @@
     color: #333;
   }
   
+  .content {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .intro {
+    margin-bottom: 20px;
+  }
+  
   .sectionTitle {
-    font-weight: 600;
-    margin-top: 16px;
-    margin-bottom: 8px;
-    font-size: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 24px;
+    margin-bottom: 12px;
     color: #222;
   }
   
+  .card {
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  }
+  
+  .card h4 {
+    font-size: 16px;
+    margin-bottom: 6px;
+    color: #333;
+  }
+  
+  .card p {
+    margin: 2px 0;
+  }
+  
+  .notice {
+    margin-top: 20px;
+    background-color: #fff7e6;
+    padding: 12px;
+    border-left: 4px solid #f6a500;
+    border-radius: 8px;
+  }
+  
   .updateNote {
-    margin-top: 24px;
     font-size: 12px;
-    color: #999;
+    color: #888;
+    margin-top: 20px;
   }
   
