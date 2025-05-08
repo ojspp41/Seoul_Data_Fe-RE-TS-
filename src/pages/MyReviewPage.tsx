@@ -21,6 +21,7 @@ interface Review {
 const MyReviewPage = () => {
     const navigate = useNavigate();
     const [reviews, setReviews] = useState<Review[]>([]);
+    const myVerifyId = localStorage.getItem("verify_id");
 
     useEffect(() => {
         const fetchMyReviews = async () => {
@@ -93,6 +94,7 @@ const MyReviewPage = () => {
                                         onDelete={() =>
                                             setReviews((prev) => prev.filter((r) => r.id !== review.id))
                                         }
+                                        reviewAuthorVerifyId={myVerifyId || ''}
                                         />
 
                                     </motion.div>

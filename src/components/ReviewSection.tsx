@@ -16,6 +16,7 @@ interface ReviewData {
   visitedAt: string;
   rating: number;
   mediaList?: { imageUrl: string }[];
+  verifyId:string;
 }
 
 export default function ReviewSection({ eventId }: ReviewSectionProps) {
@@ -80,6 +81,7 @@ export default function ReviewSection({ eventId }: ReviewSectionProps) {
             setReviews((prev) => prev.filter((r) => r.id !== review.id));
             setTotalReviews((prev) => prev - 1);
           }}
+          reviewAuthorVerifyId={review.verifyId}
         />
         ))}
       </div>

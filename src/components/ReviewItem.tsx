@@ -9,13 +9,15 @@ interface ReviewItemProps {
   content: string;
   mediaList?: { imageUrl: string }[];
   onDelete?: () => void; // ✅ 삭제 후 목록 갱신 등 외부 처리
+  reviewAuthorVerifyId: string; 
 }
 
-export default function ReviewItem({ reviewId, name, visitDate, content, mediaList = [], onDelete }: ReviewItemProps) {
+export default function ReviewItem({ reviewId, name, visitDate, content, mediaList = [], onDelete,reviewAuthorVerifyId }: ReviewItemProps) {
   const hasImage = mediaList.length > 0;
   const imageUrl = hasImage ? mediaList[0].imageUrl : null;
   
-
+  const myVerifyId = localStorage.getItem("verify_id"); // ✅ 내 ID 가져오기
+  const isAuthor = myVerifyId === reviewAuthorVerifyId; // ✅ 비교
   
 
   return (
@@ -23,17 +25,18 @@ export default function ReviewItem({ reviewId, name, visitDate, content, mediaLi
       <div className={styles.topInfo}>
         <span className={styles.name}>{name}</span>
         <span className={styles.meta}>{visitDate}</span>
-        <button
+        {isAuthor && (
+          <button
             className={styles.deleteBtn}
             onClick={async (e) => {
-              e.stopPropagation(); // ❗ 이 줄이 핵심입니다
-              if (window.confirm('정말 삭제하시겠습니까?')) {
+              e.stopPropagation();
+              if (window.confirm("정말 삭제하시겠습니까?")) {
                 try {
                   await axiosInstance.delete(`/api/auth/user/reviews/${reviewId}`);
-                  alert('리뷰가 삭제되었습니다.');
+                  alert("리뷰가 삭제되었습니다.");
                   onDelete?.();
                 } catch (err) {
-                  alert('삭제 실패');
+                  alert("삭제 실패");
                   console.error(err);
                 }
               }
@@ -41,6 +44,7 @@ export default function ReviewItem({ reviewId, name, visitDate, content, mediaLi
           >
             삭제
           </button>
+        )}
 
       </div>
 
