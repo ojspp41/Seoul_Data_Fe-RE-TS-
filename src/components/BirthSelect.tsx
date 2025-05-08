@@ -20,7 +20,7 @@ const BirthSelect: React.FC = () => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.selectGroup}>
-                <label className={styles.label}>년</label>
+                <label className={styles.label}>생년</label>
                 <select
                     value={birth.year}
                     onChange={(e) => handleBirthChange('year', e.target.value)}
