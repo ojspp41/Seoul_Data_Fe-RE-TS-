@@ -17,7 +17,7 @@ const navItems = [
     path: '/chat',
   },
   {
-    label: '검색색',
+    label: '검색',
     icon: '/assets/search-bottom.svg',
     activeIcon: '/assets/search-active.svg',
     path: '/fest/all',
