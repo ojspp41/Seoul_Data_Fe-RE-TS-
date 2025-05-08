@@ -7,7 +7,7 @@ import {
     QueryClient,
     QueryClientProvider,
   } from '@tanstack/react-query';
-
+import OpenExternalBrowser from './OpenExternalBrowser';
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -19,6 +19,7 @@ import {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
+        <OpenExternalBrowser />
         <RouterProvider router={router} />
     </QueryClientProvider>
 
