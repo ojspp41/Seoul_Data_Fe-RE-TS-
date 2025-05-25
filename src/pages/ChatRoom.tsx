@@ -44,30 +44,35 @@ const ChatRoom: React.FC = () => {
   // ✅ 경로에 따라 수정 필요
   
   useEffect(() => {
-    const fetchMemberInfo = async () => {
-      try {
-        const response = await axiosInstance.get(`/api/auth/user/chatrooms/${roomId}/memberInfo`);
-        const memberInfo = response.data.data?.[0];
-        setIsOwner(memberInfo.role === 'OWNER');
-        fetchMessages(memberInfo.verifyId);
-        setupWebSocket(memberInfo.verifyId);
+  const fetchMemberInfo = async () => {
+    try {
+      const response = await axiosInstance.get(`/api/auth/user/chatrooms/${roomId}/memberInfo`);
+      const memberInfo = response.data.data?.[0];
+      console.log('[DEBUG] Member Info:', memberInfo);
 
-      } catch (error) {
-        console.error('방장 여부 확인 실패:', error);
-      }
-    };
-    
-  
-    if (roomId) {
-      fetchMemberInfo();
+      setIsOwner(memberInfo.role === 'OWNER');
+      fetchMessages(memberInfo.verifyId);
+      setupWebSocket(memberInfo.verifyId);
+
+    } catch (error) {
+      console.error('[ERROR] 방장 여부 확인 실패:', error);
     }
-  }, [roomId]);
+  };
+
+  if (roomId) {
+    console.log('[DEBUG] roomId:', roomId);
+    fetchMemberInfo();
+  }
+}, [roomId]);
+
 
   const fetchMessages = async (verifyId: string) => {
+  try {
     const response = await axiosInstance.get<{ data: { content: RawMessage[] } }>(
       `/api/auth/user/chat/rooms/${roomId}/messages`
     );
-  
+    console.log('[DEBUG] Fetched Raw Messages:', response.data.data.content);
+
     const sortedMessages: ChatMessageData[] = response.data.data.content
       .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
       .map((msg) => ({
@@ -79,34 +84,44 @@ const ChatRoom: React.FC = () => {
           minute: '2-digit',
         }),
       }));
-  
+
     setMessages(sortedMessages);
-  };
+    console.log('[DEBUG] Sorted and Mapped Messages:', sortedMessages);
+  } catch (err) {
+    console.error('[ERROR] 메시지 불러오기 실패:', err);
+  }
+};
+
   
   
   const setupWebSocket = async (verifyId: string) => {
-    if (!roomId) return;
-    await connectStomp();
-    if (subscribedRef.current) return;
-    subscribedRef.current = true;
-  
-    sendEnterMessage(Number(roomId));
-    subscribeToRoom(Number(roomId), (message) => {
-      const body = JSON.parse(message.body);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: body.messageId,
-          sender: body.senderVerifyId === verifyId ? 'other' : 'me',
-          message: body.content,
-          time: new Date(body.createdAt).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-          }),
-        },
-      ]);
-    });
-  };
+  if (!roomId) return;
+  await connectStomp();
+  if (subscribedRef.current) return;
+  subscribedRef.current = true;
+
+  sendEnterMessage(Number(roomId));
+  console.log('[DEBUG] WebSocket 연결 및 입장 메시지 전송 완료');
+
+  subscribeToRoom(Number(roomId), (message) => {
+    const body = JSON.parse(message.body);
+    console.log('[DEBUG] 수신된 메시지:', body);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: body.messageId,
+        sender: body.senderVerifyId === verifyId ? 'other' : 'me',
+        message: body.content,
+        time: new Date(body.createdAt).toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      },
+    ]);
+  });
+};
+
 
   useEffect(() => {
     if (chatBodyRef.current) {
@@ -115,10 +130,11 @@ const ChatRoom: React.FC = () => {
   }, [messages]);
 
   const handleSend = () => {
-    if (!inputValue.trim() || !roomId) return;
-    sendChatMessage(Number(roomId), inputValue, 'TEXT');
-    setInputValue('');
-  };
+  if (!inputValue.trim() || !roomId) return;
+  console.log('[DEBUG] 메시지 전송:', inputValue);
+  sendChatMessage(Number(roomId), inputValue, 'TEXT');
+  setInputValue('');
+};
 
   return (
     <div>
