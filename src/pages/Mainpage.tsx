@@ -1,6 +1,5 @@
 import styles from './css/Mainpage.module.css';
 import { motion } from 'framer-motion';
-
 const MainPage = () => {
   const handleKakaoLogin = () => {
     window.location.href = "https://13.125.224.67.nip.io/oauth2/authorization/kakao";
@@ -9,7 +8,8 @@ const MainPage = () => {
   return (
     <div className={styles.container}>
       <img src="/assets/main.svg" alt="메인 배경 이미지" className={styles.mainImage} />
-
+      
+      
 
       {/* 타이틀 애니메이션 */}
       <motion.div
@@ -42,6 +42,7 @@ const MainPage = () => {
       >
         <img src="/assets/kakao.svg" alt="카카오 아이콘" className={styles.kakaoIcon} />
         <p className={styles.kakoText}>카카오로 빠르게 시작하기</p>
+        
       </motion.button>
     </div>
   );

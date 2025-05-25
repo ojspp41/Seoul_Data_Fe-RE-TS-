@@ -36,16 +36,21 @@ const MainpageLogin = () => {
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  const loadFestivals = useCallback(async () => {
+  const loadFestivals = useCallback(async (pageToLoad: number) => {
     try {
       const today = formatDate(new Date());
       const response = await axiosInstance.get('/api/auth/user/event', {
-        params: { startDate: today, endDate: today, page, size: 5 },
+        params: { startDate: today, endDate: today, page: pageToLoad, size: 5 },
       });
       const newEvents = response.data.data.content;
       
       console.log("pl",newEvents);
-      setFestivals(prev => [...prev, ...newEvents]);
+      setFestivals(prev => {
+        const existingIds = new Set(prev.map(f => f.eventId));
+        const filtered = newEvents.filter((f: Festival) => !existingIds.has(f.eventId));
+        return [...prev, ...filtered];
+      });
+
       if (newEvents.length < 5) setHasMore(false);
     } catch (error) {
       console.error('행사 불러오기 실패:', error);
@@ -53,8 +58,9 @@ const MainpageLogin = () => {
   }, [page]);
 
   useEffect(() => {
-    loadFestivals();
-  }, [loadFestivals]);
+    loadFestivals(page);
+  }, [page, loadFestivals]);
+
 
   useEffect(() => {
     if (!hasMore) return;
