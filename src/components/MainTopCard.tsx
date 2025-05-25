@@ -3,7 +3,7 @@ import '../index.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 // MainTopCard.tsx
-import React,{ useEffect } from 'react';
+import React from 'react';
 import Slider from 'react-slick';
 import {  UseQueryOptions ,useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
