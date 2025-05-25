@@ -3,13 +3,12 @@ import '../index.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 // MainTopCard.tsx
-import React from 'react';
+import React,{ useEffect } from 'react';
 import Slider from 'react-slick';
 import {  UseQueryOptions ,useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
 import styles from './css/MainTopCard.module.css';
-
 interface CardItem {
   eventId: number;
   mainText: string;
@@ -32,6 +31,16 @@ const sliderSettings = {
 } as const;
 
 const MainTopCard: React.FC = () => {
+  // App.tsx 또는 MainTopCard.tsx에서
+  useEffect(() => {
+    const start = performance.getEntriesByName('main-render-start')[0]?.startTime;
+    const now = performance.now();
+
+    if (start !== undefined) {
+      console.log(`[렌더링 완료] MainTopCard 렌더링 시간: ${Math.round(now - start)}ms`);
+    }
+  }, []);
+
   const navigate = useNavigate();
 
   // 병렬로 2개의 쿼리를 실행
