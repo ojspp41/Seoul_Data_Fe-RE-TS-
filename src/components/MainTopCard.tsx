@@ -5,7 +5,7 @@ import 'slick-carousel/slick/slick-theme.css';
 // MainTopCard.tsx
 import React from 'react';
 import Slider from 'react-slick';
-import { useQueries, UseQueryResult } from '@tanstack/react-query';
+import {  UseQueryOptions ,useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
 import styles from './css/MainTopCard.module.css';
@@ -35,49 +35,47 @@ const MainTopCard: React.FC = () => {
   const navigate = useNavigate();
 
   // 병렬로 2개의 쿼리를 실행
-  const [recommendQuery, popularQuery] = useQueries({
-    queries: [
-      {
-        queryKey: ['recommendEvents'],
-        queryFn: async (): Promise<CardItem[]> => {
-          const res = await axiosInstance.get('/api/auth/user/event/recommend');
-          const arr = Array.isArray(res.data.data) ? res.data.data : [];
-          console.log("arr",arr);
-          return arr.map((item: any) => ({
-            eventId: item.eventId,
-            mainText: item.title,
-            subText: `${item.category} | ${item.guName}`,
-            imageUrl: item.mainImg || '/assets/default-card.jpg',
-          }));
-        },
-        staleTime: 0,
-        refetchOnMount: true, // ✅ 추가
-        // 이 컴포넌트에서는 전역 staleTime을 그대로 사용해도 되지만, 필요시 override 가능
-      },
-      {
-        queryKey: ['popularEvents', 4],
-        queryFn: async (): Promise<CardItem[]> => {
-          const res = await axiosInstance.get('/api/auth/user/event', {
-            params: { sortByPopularity: 'True', size: 4 },
-          });
-          const content = Array.isArray(res.data.data?.content)
-            ? res.data.data.content
-            : Array.isArray(res.data.data)
-            ? res.data.data
-            : [];
-            console.log("content",content);
-          return content.map((item: any) => ({
-            eventId: item.eventId,
-            mainText: item.title,
-            subText: `${item.category} | ${item.guName}`,
-            imageUrl: item.mainImg || '/assets/default-card.jpg',
-          }));
-        },
-        staleTime: 0,
-        refetchOnMount: true, // ✅ 추가
-      },
-    ],
-  }) as [UseQueryResult<CardItem[]>, UseQueryResult<CardItem[]>];
+  const recommendQuery = useQuery({
+    queryKey: ['recommendEvents'],
+    queryFn: async () => {
+      const res = await axiosInstance.get('/api/auth/user/event/recommend');
+      const arr = Array.isArray(res.data.data) ? res.data.data : [];
+      return arr.map((item: any) => ({
+        eventId: item.eventId,
+        mainText: item.title,
+        subText: `${item.category} | ${item.guName}`,
+        imageUrl: item.mainImg || '/assets/default-card.jpg',
+      }));
+    },
+    staleTime: 1000 * 60 * 60 * 2,
+    cacheTime: 1000 * 60 * 60 * 2,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  }as UseQueryOptions<CardItem[], Error>);
+
+
+const popularQuery = useQuery<CardItem[]>({
+  queryKey: ['popularEvents', 4],
+  queryFn: async () => {
+    const res = await axiosInstance.get('/api/auth/user/event', {
+      params: { sortByPopularity: 'True', size: 4 },
+    });
+    const content = Array.isArray(res.data.data?.content)
+      ? res.data.data.content
+      : Array.isArray(res.data.data)
+      ? res.data.data
+      : [];
+    return content.map((item: any) => ({
+      eventId: item.eventId,
+      mainText: item.title,
+      subText: `${item.category} | ${item.guName}`,
+      imageUrl: item.mainImg || '/assets/default-card.jpg',
+    }));
+  },
+  staleTime: 0,
+  refetchOnMount: true,
+});
+
 
   // 로딩 및 에러 처리
   if (recommendQuery.isLoading || popularQuery.isLoading) {
