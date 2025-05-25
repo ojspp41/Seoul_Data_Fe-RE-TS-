@@ -1,4 +1,4 @@
-import { useQueries, UseQueryResult } from '@tanstack/react-query';
+import { useQueries, UseQueryResult,UseQueryOptions } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import EventCard from '../components/EventCard';
@@ -27,33 +27,38 @@ const formatDate = (start?: string, end?: string) => {
 const AIRecommendPage = () => {
   const navigate = useNavigate();
 
-  const [recommendQuery, popularQuery] = useQueries({
-    queries: [
-      {
-        queryKey: ['recommendEvents'],
-        queryFn: async (): Promise<CardItem[]> => {
-          const res = await axiosInstance.get('/api/auth/user/event/recommend');
-          return Array.isArray(res.data.data) ? res.data.data : [];
-        },
-        staleTime: 0,
-        refetchOnMount: true,
-      },
-      {
-        queryKey: ['popularEvents', 4],
-        queryFn: async (): Promise<CardItem[]> => {
-          const res = await axiosInstance.get('/api/auth/user/event', {
-            params: { sortByPopularity: 'True', size: 4 },
-          });
-          const content = Array.isArray(res.data.data?.content)
-            ? res.data.data.content
-            : [];
-          return content;
-        },
-        staleTime: 0,
-        refetchOnMount: true,
-      },
-    ],
-  }) as [UseQueryResult<CardItem[]>, UseQueryResult<CardItem[]>];
+  const recommendOptions: UseQueryOptions<CardItem[]> = {
+  queryKey: ['recommendEvents'],
+  queryFn: async () => {
+    const res = await axiosInstance.get('/api/auth/user/event/recommend');
+    return Array.isArray(res.data.data) ? res.data.data : [];
+  },
+  staleTime: 1000 * 60 * 60 * 2,
+  cacheTime: 1000 * 60 * 60 * 2,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+}as UseQueryOptions<CardItem[], Error>;
+
+const popularOptions: UseQueryOptions<CardItem[]> = {
+  queryKey: ['popularEvents', 4],
+  queryFn: async () => {
+    const res = await axiosInstance.get('/api/auth/user/event', {
+      params: { sortByPopularity: 'True', size: 4 },
+    });
+    const content = Array.isArray(res.data.data?.content)
+      ? res.data.data.content
+      : [];
+    return content;
+  },
+  staleTime: 1000 * 60 * 60 * 2,
+  cacheTime: 1000 * 60 * 60 * 2,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+}as UseQueryOptions<CardItem[], Error>;
+
+const [recommendQuery, popularQuery] = useQueries({
+  queries: [recommendOptions, popularOptions],
+}) as [UseQueryResult<CardItem[]>, UseQueryResult<CardItem[]>];
 
   if (recommendQuery.isLoading || popularQuery.isLoading) {
     return <div>로딩 중...</div>;
