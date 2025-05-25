@@ -32,14 +32,7 @@ const sliderSettings = {
 
 const MainTopCard: React.FC = () => {
   // App.tsx 또는 MainTopCard.tsx에서
-  useEffect(() => {
-    const start = performance.getEntriesByName('main-render-start')[0]?.startTime;
-    const now = performance.now();
-
-    if (start !== undefined) {
-      console.log(`[렌더링 완료] MainTopCard 렌더링 시간: ${Math.round(now - start)}ms`);
-    }
-  }, []);
+  
 
   const navigate = useNavigate();
 
@@ -47,8 +40,14 @@ const MainTopCard: React.FC = () => {
   const recommendQuery = useQuery({
     queryKey: ['recommendEvents'],
     queryFn: async () => {
+      const start = performance.now(); 
+
       const res = await axiosInstance.get('/api/auth/user/event/recommend');
       const arr = Array.isArray(res.data.data) ? res.data.data : [];
+
+      const duration = performance.now() - start; // ✅ 경과 시간 계산
+      console.log(`📦 추천 데이터 불러오는 데 걸린 시간: ${Math.round(duration)}ms`);
+
       return arr.map((item: any) => ({
         eventId: item.eventId,
         mainText: item.title,
@@ -66,6 +65,7 @@ const MainTopCard: React.FC = () => {
 const popularQuery = useQuery<CardItem[]>({
   queryKey: ['popularEvents', 4],
   queryFn: async () => {
+    const start = performance.now(); // ✅ 시작 시간 기록
     const res = await axiosInstance.get('/api/auth/user/event', {
       params: { sortByPopularity: 'True', size: 4 },
     });
@@ -74,6 +74,8 @@ const popularQuery = useQuery<CardItem[]>({
       : Array.isArray(res.data.data)
       ? res.data.data
       : [];
+      const duration = performance.now() - start; // ✅ 경과 시간 계산
+    console.log(`🔥 인기 축제 데이터 불러오는 데 걸린 시간: ${Math.round(duration)}ms`);
     return content.map((item: any) => ({
       eventId: item.eventId,
       mainText: item.title,
