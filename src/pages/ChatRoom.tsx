@@ -44,26 +44,25 @@ const ChatRoom: React.FC = () => {
   // ✅ 경로에 따라 수정 필요
   
   useEffect(() => {
-  const fetchMemberInfo = async () => {
-    try {
-      const response = await axiosInstance.get(`/api/auth/user/chatrooms/${roomId}/memberInfo`);
-      const memberInfo = response.data.data?.[0];
-      console.log('[DEBUG] Member Info:', memberInfo);
+    const verifyId = localStorage.getItem('verify_id');
+    if (!roomId || !verifyId) return;
 
-      setIsOwner(memberInfo.role === 'OWNER');
-      fetchMessages(memberInfo.verifyId);
-      setupWebSocket(memberInfo.verifyId);
+    const fetchData = async () => {
+      try {
+        // 방장 여부는 그대로 유지하고 싶다면 여기는 유지
+        const response = await axiosInstance.get(`/api/auth/user/chatrooms/${roomId}/memberInfo`);
+        const memberInfo = response.data.data?.[0];
+        setIsOwner(memberInfo.role === 'OWNER');
+      } catch (error) {
+        console.error('[ERROR] 방장 여부 확인 실패:', error);
+      }
 
-    } catch (error) {
-      console.error('[ERROR] 방장 여부 확인 실패:', error);
-    }
-  };
+      fetchMessages(verifyId);
+      setupWebSocket(verifyId);
+    };
 
-  if (roomId) {
-    console.log('[DEBUG] roomId:', roomId);
-    fetchMemberInfo();
-  }
-}, [roomId]);
+    fetchData();
+  }, [roomId]);
 
 
   const fetchMessages = async (verifyId: string) => {
