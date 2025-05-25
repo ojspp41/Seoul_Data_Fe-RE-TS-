@@ -89,54 +89,54 @@ const popularQuery = useQuery<CardItem[]>({
 
 
   // 로딩 및 에러 처리
-  if (recommendQuery.isLoading && !recommendQuery.data) {
-  // 추천 데이터가 아직 로딩 중이고, 데이터도 없음 → 초기 로딩 화면
-  return (
-    <div className={styles.container}>
-      {[1, 2].map((_, i) => (
-        <div key={i} className={styles.skeletonCard}></div>
-      ))}
-    </div>
-  );
-}
-
+  if (recommendQuery.isLoading || popularQuery.isLoading) {
+    return (
+      <div className={styles.container}>
+        {[1, 2].map((_, i) => (
+          <div key={i} className={styles.skeletonCard}></div>
+        ))}
+      </div>
+    );
+  }
 
 
   const topCardData = recommendQuery.data || [];
   const popularCardData = popularQuery.data || [];
   return (
-  <div className={styles.container}>
-    {topCardData.length > 0 ? (
-      <div style={{ position: 'relative' }}>
-        <Slider {...sliderSettings} className={styles.slider}>
-          {[...topCardData, ...popularCardData].map((item, idx) => (
-            <div key={idx}>
-              <div
-                className={styles.cardWrapper}
-                style={{
-                  backgroundImage: `url(${item.imageUrl})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-                onClick={() => navigate(`/fest/detail?eventId=${item.eventId}`)}
-              >
-                <div className={styles.cardOverlay}>
-                  <p className={styles.mainText}>{item.mainText}</p>
-                  <p className={styles.subText}>{item.subText}</p>
+    <div className={styles.container}>
+        {topCardData.length + popularCardData.length > 0 ? (
+          <div style={{ position: 'relative' }}>
+            <Slider {...sliderSettings} className={styles.slider}>
+              {[...topCardData, ...popularCardData].map((item, idx) => (
+                <div key={idx}>
+                  <div
+                    className={styles.cardWrapper}
+                    style={{
+                      backgroundImage: `url(${item.imageUrl})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                    onClick={() => navigate(`/fest/detail?eventId=${item.eventId}`)}
+                  >
+                    <div className={styles.cardOverlay}>
+                      <p className={styles.mainText}>{item.mainText}</p>
+                      <p className={styles.subText}>{item.subText}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </Slider>
-      </div>
-    ) : (
-      <div className={styles.emptyMessage}>
-        활동이 없어 <strong>추천할 수 없습니다.</strong>
-      </div>
-    )}
-  </div>
-);
+              ))}
+            </Slider>
 
+            
+          </div>
+        ) : (
+          <div className={styles.emptyMessage}>
+            활동이 없어 <strong>추천할 수 없습니다.</strong>
+          </div>
+        )}
+      </div>
+
+  );
 };
 
 export default MainTopCard;
