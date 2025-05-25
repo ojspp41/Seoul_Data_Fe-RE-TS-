@@ -81,5 +81,22 @@
 
 /* 버튼은 카드 아래 고정 */
 
+/* MainTopCard.module.css */
+.skeletonCard {
+  height: 180px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
 
 

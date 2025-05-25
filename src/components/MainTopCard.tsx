@@ -81,11 +81,15 @@ const MainTopCard: React.FC = () => {
 
   // 로딩 및 에러 처리
   if (recommendQuery.isLoading || popularQuery.isLoading) {
-    return <div>로딩 중…</div>;
+    return (
+      <div className={styles.container}>
+        {[1, 2].map((_, i) => (
+          <div key={i} className={styles.skeletonCard}></div>
+        ))}
+      </div>
+    );
   }
-  if (recommendQuery.error || popularQuery.error) {
-    return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
-  }
+
 
   const topCardData = recommendQuery.data || [];
   const popularCardData = popularQuery.data || [];
