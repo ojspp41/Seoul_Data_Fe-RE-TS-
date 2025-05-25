@@ -83,11 +83,9 @@ const popularQuery = useQuery<CardItem[]>({
       imageUrl: item.mainImg || '/assets/default-card.jpg',
     }));
   },
-  staleTime: 1000 * 60 * 60 * 2,
-    cacheTime: 1000 * 60 * 60 * 2,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-}as UseQueryOptions<CardItem[], Error>);
+  staleTime: 0,
+  refetchOnMount: true,
+});
 
 
   // 로딩 및 에러 처리
