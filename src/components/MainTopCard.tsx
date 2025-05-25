@@ -38,7 +38,7 @@ const MainTopCard: React.FC = () => {
 
   // 병렬로 2개의 쿼리를 실행
   const recommendQuery = useQuery({
-    queryKey: ['recommendEvents'],
+    queryKey: ['recommendEvents','main'],
     queryFn: async () => {
       const start = performance.now(); 
 
@@ -63,7 +63,7 @@ const MainTopCard: React.FC = () => {
 
 
 const popularQuery = useQuery<CardItem[]>({
-  queryKey: ['popularEvents', 4],
+  queryKey: ['popularEvents', 4 , "main"],
   queryFn: async () => {
     const start = performance.now(); // ✅ 시작 시간 기록
     const res = await axiosInstance.get('/api/auth/user/event', {

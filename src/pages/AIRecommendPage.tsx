@@ -28,7 +28,7 @@ const AIRecommendPage = () => {
   const navigate = useNavigate();
 
   const recommendOptions: UseQueryOptions<CardItem[]> = {
-  queryKey: ['recommendEvents'],
+  queryKey: ['recommendEvents', 'ai'],
   queryFn: async () => {
     const res = await axiosInstance.get('/api/auth/user/event/recommend');
     return Array.isArray(res.data.data) ? res.data.data : [];
@@ -40,7 +40,7 @@ const AIRecommendPage = () => {
 }as UseQueryOptions<CardItem[], Error>;
 
 const popularOptions: UseQueryOptions<CardItem[]> = {
-  queryKey: ['popularEvents', 4],
+  queryKey: ['popularEvents', 4, 'ai'],
   queryFn: async () => {
     const res = await axiosInstance.get('/api/auth/user/event', {
       params: { sortByPopularity: 'True', size: 4 },
