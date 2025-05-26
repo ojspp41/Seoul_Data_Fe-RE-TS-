@@ -8,6 +8,7 @@ import TermsAgreementModal from '../components/TermsAgreementModal';
 import styles from './css/RegisterPage.module.css';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
+import { AxiosError } from 'axios';
 
 const RegisterPage: React.FC = () => {
   const { nickname, email, gender, birth } = useUserStore();
@@ -35,8 +36,9 @@ const RegisterPage: React.FC = () => {
       await axiosInstance.get(`/api/auth/all-user/email/${email}`);
       setEmailCheckMessage('사용 가능한 이메일입니다.');
       setEmailChecked(true);
-    } catch (err: any) {
-      if (err.response?.status === 400) {
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      if (error.response?.status === 400) {
         setEmailCheckMessage('이미 사용 중인 이메일이 있습니다.');
       } else {
         setEmailCheckMessage('이메일 확인 중 오류가 발생했습니다.');
