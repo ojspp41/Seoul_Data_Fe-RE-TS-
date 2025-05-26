@@ -6,10 +6,6 @@ import axiosInstance from '../api/axiosInstance';
 import styles from './css/FestivalAllPage.module.css';
 import { DAYS_KR, getWeekDays } from '../utils/alldateUtils';
 import BottomNav from '../components/BottomNav';
-// 최상단 import에 추가
-import { ListChildComponentProps } from 'react-window';
-
-import { FixedSizeList as List } from 'react-window';
 interface EventType {
     eventId: number;
     category: string;
@@ -128,35 +124,23 @@ export default function FestivalAllPage() {
 
       
 
-      {/* 카드 리스트 영역 */}
-        <List
-          height={600}
-          itemCount={filteredEvents.length}
-          itemSize={330}
-          width={'100%'}
-        >
-          {({ index, style }: ListChildComponentProps) => {
-            const event = filteredEvents[index];
-            return (
-              <div style={style} key={event.eventId}>
-                <EventCard
-                  category={event.category}
-                  title={event.title}
-                  location={event.guName}
-                  dateRange={`${event.startDate} ~ ${event.endDate}`}
-                  mainImg={event.mainImg}
-                  eventId={event.eventId}
-                  onClick={() => {
-                    window.location.href = `/fest/detail?eventId=${event.eventId}`;
-                  }}
-                />
-              </div>
-            );
-          }}
-        </List>
+      <div className={styles.cardList}>
+      {filteredEvents.map((event) => (
+        <EventCard
+            key={event.eventId}
+            category={event.category}
+            title={event.title}
+            location={event.guName}
+            dateRange={`${event.startDate} ~ ${event.endDate}`}
+            mainImg={event.mainImg}
+            eventId={event.eventId}
+            onClick={() => {
+            window.location.href = `/fest/detail?eventId=${event.eventId}`;
+            }}
+        />
+        ))}
 
-
-
+      </div>
 
       {calendarOpen && (
         <CalendarModal
